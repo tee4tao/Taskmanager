@@ -7,20 +7,44 @@ import {
 } from "@fluentui/react-icons";
 import { useState } from "react";
 import { TooltipIcon } from "./TooltipIcon";
+import { Category, Priority } from "../types/todo";
 
-const TaskInput = () => {
+interface AddTodoProps {
+  onAddTodo: (
+    title: string,
+    description?: string,
+    dueDate?: Date,
+    priority?: Priority,
+    category?: Category
+  ) => void;
+}
+
+const TaskInput = ({ onAddTodo }: AddTodoProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const [inputClicked, setInputClicked] = useState(false);
+  const [quickAddText, setQuickAddText] = useState("");
+
+  const handleQuickAdd = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (quickAddText.trim()) {
+      onAddTodo(quickAddText.trim());
+      setQuickAddText("");
+    }
+  };
+
   return (
     <section className="w-full rounded-md shadow-md my-2">
-      <form action="" className="w-full bg-white p-4">
-        <div className="flex items-center gap-2">
+      <form action="" className="w-full" onSubmit={handleQuickAdd}>
+        <div className="flex items-center gap-2 bg-white p-4 py-2 shadow-sm">
           <div className="text-blue-600">
             {inputClicked ? <RadioButtonRegular /> : <AddRegular />}
           </div>
 
           <input
             type="text"
+            value={quickAddText}
+            onChange={(e) => setQuickAddText(e.target.value)}
             className={`w-full h-8 px-4 py-2 rounded-md outline-none transition text-sm ${
               isFocused
                 ? "placeholder:text-gray-400"
@@ -33,22 +57,28 @@ const TaskInput = () => {
             onClick={() => setInputClicked(true)}
           />
         </div>
-      </form>
-      {inputClicked && (
-        <div className="flex items-center justify-between p-4">
-          <div className="space-x-4">
-            <TooltipIcon icon={CalendarLtrRegular} tooltipText="Add due date" />
-            <TooltipIcon icon={AlertRegular} tooltipText="Remind me" />
-            <TooltipIcon icon={ArrowRepeatAllRegular} tooltipText="Repeat" />
+        {inputClicked && (
+          <div className="flex items-center justify-between p-4 py-2">
+            <div className="space-x-4">
+              <TooltipIcon
+                icon={CalendarLtrRegular}
+                tooltipText="Add due date"
+              />
+              <TooltipIcon icon={AlertRegular} tooltipText="Remind me" />
+              <TooltipIcon icon={ArrowRepeatAllRegular} tooltipText="Repeat" />
+            </div>
+            <button
+              type="submit"
+              disabled={!quickAddText.trim()}
+              className={`border p-1 text-sm text-blue-600 ${
+                !quickAddText.trim() && "cursor-not-allowed text-gray-400"
+              }`}
+            >
+              Add
+            </button>
           </div>
-          <button
-            disabled
-            className="border p-1 text-sm text-gray-400 cursor-not-allowed"
-          >
-            Add
-          </button>
-        </div>
-      )}
+        )}
+      </form>
     </section>
   );
 };

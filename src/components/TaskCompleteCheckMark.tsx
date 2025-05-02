@@ -6,29 +6,30 @@ import {
   CheckmarkCircleRegular,
 } from "@fluentui/react-icons";
 import { Task } from "../types";
+import { Todo } from "../types/todo";
 
 interface CheckMarkProps {
-  task: Task;
-  toggleTaskCompletion: (taskId: number) => void;
+  todo: Todo;
+  onToggleComplete: (taskId: string) => void;
   className?: string;
 }
 
 const TaskCompleteCheckMark = ({
-  task,
-  toggleTaskCompletion,
+  todo,
+  onToggleComplete,
   className = "",
 }: CheckMarkProps) => {
   const [animateComplete, setAnimateComplete] = useState(false);
   return (
     <div
       className={`flex items-center text-blue-600 cursor-pointer ${className}`}
-      onClick={() => toggleTaskCompletion(task.id)}
+      onClick={() => onToggleComplete(todo.id)}
       onMouseOver={() => setAnimateComplete(true)}
       onMouseOut={() => setAnimateComplete(false)}
     >
       {animateComplete ? (
         <CheckmarkCircleRegular fontSize={20} className="" />
-      ) : task.isCompleted ? (
+      ) : todo.completed ? (
         <CheckmarkCircleRegular fontSize={20} className="" />
       ) : (
         <CircleRegular fontSize={20} className="" />
