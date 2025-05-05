@@ -115,14 +115,18 @@ const TodoItem: React.FC<TodoItemProps> = ({
           >
             {todo.title}
           </td>
-          <td className="py-1 px-4 text-sm text-red-500">
+          <td className="py-1 px-4 text-sm ">
             {todo.dueDate && (
               <div
-                className={`task-due-date ${isDueSoon ? "task-due-soon" : ""}`}
+                className={`flex items-center gap-2 font-semibold ${
+                  isDueSoon ? "text-red-600" : ""
+                }`}
               >
-                <CalendarMonthRegular className="due-date-icon" />
-                <span>{formatDueDate(todo.dueDate)}</span>
-                {isDueSoon && <WarningRegular className="due-soon-icon" />}
+                <div className="flex items-center">
+                  <CalendarMonthRegular className="text-sm" />
+                  <span>{formatDueDate(todo.dueDate)}</span>
+                </div>
+                {isDueSoon && <WarningRegular className="text-sm" />}
               </div>
             )}
           </td>
@@ -166,10 +170,16 @@ const TodoItem: React.FC<TodoItemProps> = ({
             <div>
               <div className={` text-sm `}>{todo.title}</div>
               {todo.dueDate && (
-                <p className=" text-xs text-red-500">
-                  <CalendarMonthRegular className="due-date-icon" />
-                  <span>{formatDueDate(todo.dueDate)}</span>
-                  {isDueSoon && <WarningRegular className="due-soon-icon" />}
+                <p
+                  className={`text-xs flex items-center gap-2 font-semibold ${
+                    isDueSoon ? "text-red-600" : ""
+                  }`}
+                >
+                  <div className="flex items-center">
+                    <CalendarMonthRegular className="text-sm" />
+                    <span>{formatDueDate(todo.dueDate)}</span>
+                  </div>
+                  {isDueSoon && <WarningRegular className="text-sm" />}
                 </p>
               )}
               {/* <p className=" text-xs text-red-500">{todo.dueDate}</p> */}

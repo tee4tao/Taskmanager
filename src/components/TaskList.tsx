@@ -19,6 +19,7 @@ import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import TodoItem from "./TodoItem";
 import TaskDetailsSidebar from "./TaskDetailsSidebar";
+import { useGlobalContext } from "./context/GlobalContext";
 
 interface TodoListProps {
   todos: Todo[];
@@ -139,7 +140,8 @@ const TaskList: React.FC<TaskListProps> = ({
   onDeleteTodo,
   onReorderTodos,
 }) => {
-  const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
+  // const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
+  const { editingTodo, setEditingTodo } = useGlobalContext();
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
 
   // Apply filters to todos
@@ -413,6 +415,7 @@ const TaskList: React.FC<TaskListProps> = ({
             todo={editingTodo}
             onSave={handleSaveTodo}
             onClose={handleCloseModal}
+            // onToggleComplete={onToggleComplete}
           />
         )}
       </section>

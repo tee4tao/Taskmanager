@@ -1,11 +1,9 @@
 import { useState } from "react";
 import {
-  StarRegular,
-  StarFilled,
   CircleRegular,
   CheckmarkCircleRegular,
+  CheckmarkCircleFilled,
 } from "@fluentui/react-icons";
-import { Task } from "../types";
 import { Todo } from "../types/todo";
 
 interface CheckMarkProps {
@@ -27,10 +25,10 @@ const TaskCompleteCheckMark = ({
       onMouseOver={() => setAnimateComplete(true)}
       onMouseOut={() => setAnimateComplete(false)}
     >
-      {animateComplete ? (
+      {animateComplete && !todo.completed ? (
         <CheckmarkCircleRegular fontSize={20} className="" />
       ) : todo.completed ? (
-        <CheckmarkCircleRegular fontSize={20} className="" />
+        <CheckmarkCircleFilled fontSize={20} className="" />
       ) : (
         <CircleRegular fontSize={20} className="" />
       )}

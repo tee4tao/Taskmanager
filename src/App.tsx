@@ -13,6 +13,7 @@ import { useNotifications } from "./hooks/useNotifications";
 import { User } from "./types/user";
 import { todoService } from "./services/todoService";
 import { authService } from "./services/authService";
+import { useGlobalContext } from "./components/context/GlobalContext";
 
 // Define action types for the reducer
 type TodoAction =
@@ -306,6 +307,8 @@ const App: React.FC = () => {
     setViewMode(mode);
   };
 
+  const { editingTodo } = useGlobalContext();
+
   // const toggleTaskImportance = (taskId: number) => {
   //   setTasks(
   //     tasks.map((task) =>
@@ -358,7 +361,7 @@ const App: React.FC = () => {
       />
       <div
         className={`${
-          selectedTask
+          editingTodo
             ? "block lg:hidden opacity-100 fixed inset-0 w-full h-full bg-[#0000008e]  transition-all duration-300 z-10"
             : "opacity-0 hidden"
         }`}

@@ -18,14 +18,20 @@ import {
   CheckboxUncheckedRegular,
   CheckboxCheckedRegular,
   PanelRightContractRegular,
+  CheckmarkCircleRegular,
+  CircleRegular,
+  ImportantRegular,
+  CheckmarkCircleFilled,
 } from "@fluentui/react-icons";
 import { TooltipIcon } from "./TooltipIcon";
 import { Category, Priority, Todo } from "../types/todo";
+import TaskCompleteCheckMark from "./TaskCompleteCheckMark";
 
 interface TaskDetailsSidebarProps {
   todo: Todo;
   onClose: () => void;
   onSave: (updatedTodo: Todo) => void;
+  // onToggleComplete: (id: string) => void;
   // onUpdateTask: (taskId: number, updates: Partial<Task>) => void;
 }
 
@@ -33,6 +39,7 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
   todo,
   onClose,
   onSave,
+  // onToggleComplete,
 }) => {
   const [title, setTitle] = useState(todo.title);
   const [description, setDescription] = useState(todo.description || "");
@@ -43,6 +50,7 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
   const [category, setCategory] = useState<Category>(todo.category);
   const [completed, setCompleted] = useState<boolean>(todo.completed);
   const [isStarred, setIsStarred] = useState<boolean>(todo.isStarred);
+  const [animateComplete, setAnimateComplete] = useState<boolean>(false);
 
   if (!todo) return null;
 
@@ -81,19 +89,30 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
         {/* Header with task title */}
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center">
+            {/* <div className="" onClick={(e) => e.stopPropagation()}>
+              <TaskCompleteCheckMark
+                todo={todo}
+                onToggleComplete={onToggleComplete}
+                className=""
+              />
+            </div> */}
             <button
               type="button"
               onClick={toggleCompleted}
+              onMouseOver={() => setAnimateComplete(true)}
+              onMouseOut={() => setAnimateComplete(false)}
               aria-label={completed ? "Mark as incomplete" : "Mark as complete"}
               className="text-gray-500 hover:text-blue-600 mr-3"
             >
-              {completed ? (
-                <CheckboxCheckedRegular
+              {animateComplete && !completed ? (
+                <CheckmarkCircleRegular fontSize={20} />
+              ) : completed ? (
+                <CheckmarkCircleFilled
                   className="text-blue-600"
                   fontSize={20}
                 />
               ) : (
-                <CheckboxUncheckedRegular fontSize={20} />
+                <CircleRegular fontSize={20} className="text-blue-600" />
               )}
             </button>
             <input
@@ -145,10 +164,17 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
             </button>
 
             {/* Add due date */}
-            <button className="flex items-center text-gray-700 hover:bg-gray-100 rounded px-2 py-1.5 w-full">
+            <div className="flex items-center text-gray-700 hover:bg-gray-100 rounded px-2 py-1.5 w-full">
               <CalendarRegular fontSize={16} className="mr-3 text-gray-500" />
-              <span>Add due date</span>
-            </button>
+              {/* <span>Add due date</span> */}
+              <input
+                id="dueDate"
+                type="date"
+                value={dueDate ? dueDate : "Add due date"}
+                onChange={(e) => setDueDate(e.target.value)}
+                className="form-control"
+              />
+            </div>
 
             {/* Repeat */}
             <button className="flex items-center text-gray-700 hover:bg-gray-100 rounded px-2 py-1.5 w-full">
@@ -169,6 +195,10 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
                 </button>
               </div>
             ) : null} */}
+              <div className="flex items-center text-gray-700 px-2 py-1.5 w-full">
+                <TagRegular fontSize={16} className="mr-3 text-gray-500" />
+                <span>Pick a category</span>
+              </div>
               <select
                 id="category"
                 value={category}
@@ -181,14 +211,17 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
                 <option value={Category.Health}>Health</option>
                 <option value={Category.Other}>Other</option>
               </select>
-              <button className="flex items-center text-gray-700 hover:bg-gray-100 rounded px-2 py-1.5 w-full">
-                <TagRegular fontSize={16} className="mr-3 text-gray-500" />
-                <span>Pick a category</span>
-              </button>
             </div>
 
             {/* Priority(added now) */}
-            <div>
+            <div className="space-y-2">
+              <div className="flex items-center text-gray-700 px-2 py-1.5 w-full">
+                <ImportantRegular
+                  fontSize={16}
+                  className="mr-3 text-gray-500"
+                />
+                <p className="">Priority</p>
+              </div>
               <select
                 id="priority"
                 value={priority}
