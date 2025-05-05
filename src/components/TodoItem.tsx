@@ -12,6 +12,7 @@ import {
   DeleteRegular,
   CalendarMonthRegular,
   WarningRegular,
+  NoteRegular,
 } from "@fluentui/react-icons";
 import TaskCompleteCheckMark from "./TaskCompleteCheckMark";
 import { TooltipIcon } from "./TooltipIcon";
@@ -25,6 +26,7 @@ interface TodoItemProps {
   viewMode?: "grid" | "list";
   onTaskSelect: (todo: Todo) => void;
   selectedTaskId?: string;
+  showCompleted?: boolean;
 }
 
 const TodoItem: React.FC<TodoItemProps> = ({
@@ -36,6 +38,7 @@ const TodoItem: React.FC<TodoItemProps> = ({
   viewMode,
   onTaskSelect,
   selectedTaskId,
+  showCompleted,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -56,10 +59,18 @@ const TodoItem: React.FC<TodoItemProps> = ({
 
     const dueDate = new Date(date);
 
-    if (dueDate.toDateString() === today.toDateString()) {
+    if (
+      dueDate.toDateString() === today.toDateString() &&
+      viewMode !== "grid"
+    ) {
       return "Today";
-    } else if (dueDate.toDateString() === tomorrow.toDateString()) {
+    } else if (
+      dueDate.toDateString() === tomorrow.toDateString() &&
+      viewMode !== "grid"
+    ) {
       return "Tomorrow";
+    } else if (viewMode === "grid") {
+      return dueDate.toLocaleDateString("en-GB").replace(/\//g, "/");
     } else {
       return dueDate.toLocaleDateString("en-US", {
         month: "short",
@@ -101,13 +112,15 @@ const TodoItem: React.FC<TodoItemProps> = ({
             <TaskCompleteCheckMark
               todo={todo}
               onToggleComplete={onToggleComplete}
-              className="hover:border border-gray-400 p-1 w-8"
+              className="hover:border border-gray-400 p-1 w-8}"
             />
           </td>
           <td
             className={`py-1 px-4 text-sm hover:border-2 hover:border-gray-400 ${
               selectedTaskId === todo.id
                 ? "border-2 border-blue-600 hover:border-blue-600"
+                : todo.completed
+                ? " line-through text-[#605e5c]"
                 : ""
             }`}
             // onClick={() => onTaskSelect(todo)}
@@ -168,20 +181,40 @@ const TodoItem: React.FC<TodoItemProps> = ({
               />
             </div>
             <div>
-              <div className={` text-sm `}>{todo.title}</div>
-              {todo.dueDate && (
-                <p
-                  className={`text-xs flex items-center gap-2 font-semibold ${
-                    isDueSoon ? "text-red-600" : ""
-                  }`}
-                >
-                  <div className="flex items-center">
-                    <CalendarMonthRegular className="text-sm" />
-                    <span>{formatDueDate(todo.dueDate)}</span>
-                  </div>
-                  {isDueSoon && <WarningRegular className="text-sm" />}
-                </p>
-              )}
+              <div
+                className={`text-sm font-medium ${
+                  todo.completed ? " line-through text-[#605e5c]" : ""
+                }`}
+              >
+                {todo.title}
+              </div>
+              <div className="flex items-center gap-2">
+                {todo.dueDate && (
+                  <p
+                    className={`text-xs flex items-center gap-2 font-semibold ${
+                      isDueSoon ? "text-red-600" : ""
+                    }`}
+                  >
+                    <div className="flex items-center">
+                      <CalendarMonthRegular className="text-sm" />
+                      <span>{formatDueDate(todo.dueDate)}</span>
+                    </div>
+                    {isDueSoon && <WarningRegular className="text-sm" />}
+                  </p>
+                )}
+                {todo.dueDate && todo.description && (
+                  <span className="mx-1">•</span>
+                )}
+                {todo.description && (
+                  <p className="task-description flex items-center gap-1 text-sm text-[#605e5c]">
+                    <NoteRegular /> <span>Note</span>
+                  </p>
+                )}
+                {(todo.dueDate || todo.description) && (
+                  <span className="mx-1">•</span>
+                )}
+                {getCategoryBadge(todo.category)}
+              </div>
               {/* <p className=" text-xs text-red-500">{todo.dueDate}</p> */}
             </div>
           </div>

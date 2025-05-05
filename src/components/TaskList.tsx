@@ -48,6 +48,7 @@ interface DraggableTodoItemProps {
   viewMode: "grid" | "list";
   onTaskSelect: (todo: Todo) => void;
   selectedTaskId?: string;
+  showCompleted?: boolean;
 }
 
 const DraggableTodoItem: React.FC<DraggableTodoItemProps> = ({
@@ -143,6 +144,7 @@ const TaskList: React.FC<TaskListProps> = ({
   // const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
   const { editingTodo, setEditingTodo } = useGlobalContext();
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
+  const [showCompleted, setShowCompleted] = useState<boolean>(true);
 
   // Apply filters to todos
   useEffect(() => {
@@ -223,7 +225,55 @@ const TaskList: React.FC<TaskListProps> = ({
               </tr>
             </thead>
             <tbody>
-              {filteredTodos.map((todo, index) => (
+              {filteredTodos
+                .filter((todo) => todo.completed === false)
+                .map((todo, index) => (
+                  <DraggableTodoItem
+                    key={todo.id}
+                    index={index}
+                    todo={todo}
+                    onToggleComplete={onToggleComplete}
+                    onToggleStar={onToggleStar}
+                    onEdit={handleEditTodo}
+                    onDelete={onDeleteTodo}
+                    onReorderTodos={onReorderTodos}
+                    viewMode={viewMode}
+                    selectedTaskId={selectedTaskId}
+                    onTaskSelect={onTaskSelect}
+                  />
+                ))}
+              {filteredTodos.some((todo) => todo.completed === true) && (
+                <>
+                  <div className=" flex items-center gap-2">
+                    <p>Completed</p>{" "}
+                    <span>
+                      {
+                        filteredTodos.filter((todo) => todo.completed === true)
+                          .length
+                      }
+                    </span>
+                  </div>
+                  {filteredTodos
+                    .filter((todo) => todo.completed === true)
+                    .map((todo, index) => (
+                      <DraggableTodoItem
+                        key={todo.id}
+                        index={index}
+                        todo={todo}
+                        onToggleComplete={onToggleComplete}
+                        onToggleStar={onToggleStar}
+                        onEdit={handleEditTodo}
+                        onDelete={onDeleteTodo}
+                        onReorderTodos={onReorderTodos}
+                        viewMode={viewMode}
+                        selectedTaskId={selectedTaskId}
+                        onTaskSelect={onTaskSelect}
+                        showCompleted={showCompleted}
+                      />
+                    ))}
+                </>
+              )}
+              {/* {filteredTodos.map((todo, index) => (
                 <DraggableTodoItem
                   key={todo.id}
                   index={index}
@@ -237,7 +287,7 @@ const TaskList: React.FC<TaskListProps> = ({
                   selectedTaskId={selectedTaskId}
                   onTaskSelect={onTaskSelect}
                 />
-              ))}
+              ))} */}
               {/* {tasks.map((task) => (
               <tr key={task.id} className={`border-b h-10  `}>
                 <td className="py-1 px-4" onClick={(e) => e.stopPropagation()}>
@@ -286,7 +336,55 @@ const TaskList: React.FC<TaskListProps> = ({
           </table>
         ) : (
           <div className="flex flex-col gap-2">
-            {filteredTodos.map((todo, index) => (
+            {filteredTodos
+              .filter((todo) => todo.completed === false)
+              .map((todo, index) => (
+                <DraggableTodoItem
+                  key={todo.id}
+                  index={index}
+                  todo={todo}
+                  onToggleComplete={onToggleComplete}
+                  onToggleStar={onToggleStar}
+                  onEdit={handleEditTodo}
+                  onDelete={onDeleteTodo}
+                  onReorderTodos={onReorderTodos}
+                  viewMode={viewMode}
+                  selectedTaskId={selectedTaskId}
+                  onTaskSelect={onTaskSelect}
+                />
+              ))}
+            {filteredTodos.some((todo) => todo.completed === true) && (
+              <>
+                <div className=" flex items-center gap-2">
+                  <p>Completed</p>{" "}
+                  <span>
+                    {
+                      filteredTodos.filter((todo) => todo.completed === true)
+                        .length
+                    }
+                  </span>
+                </div>
+                {filteredTodos
+                  .filter((todo) => todo.completed === true)
+                  .map((todo, index) => (
+                    <DraggableTodoItem
+                      key={todo.id}
+                      index={index}
+                      todo={todo}
+                      onToggleComplete={onToggleComplete}
+                      onToggleStar={onToggleStar}
+                      onEdit={handleEditTodo}
+                      onDelete={onDeleteTodo}
+                      onReorderTodos={onReorderTodos}
+                      viewMode={viewMode}
+                      selectedTaskId={selectedTaskId}
+                      onTaskSelect={onTaskSelect}
+                      showCompleted={showCompleted}
+                    />
+                  ))}
+              </>
+            )}
+            {/* {filteredTodos.map((todo, index) => (
               <DraggableTodoItem
                 key={todo.id}
                 index={index}
@@ -300,7 +398,7 @@ const TaskList: React.FC<TaskListProps> = ({
                 selectedTaskId={selectedTaskId}
                 onTaskSelect={onTaskSelect}
               />
-            ))}
+            ))} */}
             {/* {tasks.map((task) => (
               <article
                 key={task.id}

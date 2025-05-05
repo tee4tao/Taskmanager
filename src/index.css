@@ -306,15 +306,6 @@ body {
   margin-bottom: 0.25rem;
 }
 
-.task-title {
-  font-weight: 500;
-}
-
-.task-title-completed {
-  text-decoration: line-through;
-  color: var(--text-light);
-}
-
 .task-actions {
   display: flex;
   align-items: center;
@@ -341,11 +332,11 @@ body {
   color: var(--warning-color);
 }
 
-.task-description {
+/* .task-description {
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
   color: var(--text-light);
-}
+} */
 
 .task-meta {
   display: flex;
@@ -396,18 +387,19 @@ body {
 
 .task-category {
   padding: 0.25rem 0.5rem;
-  background-color: var(--secondary-color);
-  border-radius: var(--border-radius);
+  /* background-color: var(--secondary-color); */
+  /* border-radius: var(--border-radius); */
   text-transform: capitalize;
+  font-size: 14px;
 }
 
 .task-category-work {
-  background-color: rgba(0, 120, 212, 0.1);
+  /* background-color: rgba(0, 120, 212, 0.1); */
   color: var(--primary-color);
 }
 
 .task-category-personal {
-  background-color: rgba(134, 97, 197, 0.1);
+  /* background-color: rgba(134, 97, 197, 0.1); */
   color: #8661c5;
 }
 
@@ -419,17 +411,17 @@ body {
   } */
 
 .task-category-shopping {
-  background-color: rgba(255, 140, 0, 0.1);
+  /* background-color: rgba(255, 140, 0, 0.1); */
   color: #ff8c00;
 }
 
 .task-category-health {
-  background-color: rgba(0, 183, 195, 0.1);
+  /* background-color: rgba(0, 183, 195, 0.1); */
   color: #00b7c3;
 }
 
 .task-category-other {
-  background-color: rgba(96, 94, 92, 0.1);
+  /* background-color: rgba(96, 94, 92, 0.1); */
   color: var(--text-light);
 }
 
