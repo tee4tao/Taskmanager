@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { Todo } from "../../types/todo";
+import { Todo } from "../types/todo";
 
 interface GlobalContextType {
   editingTodo: Todo | null;
@@ -7,9 +7,9 @@ interface GlobalContextType {
 }
 
 const GlobalContext = createContext<GlobalContextType>({
-//   editingTodo: Todo | null;
-//   //   handleEditTodo: (todo: Todo) => void;
-//   setEditingTodo: React.Dispatch<React.SetStateAction<Todo | null>>;
+  //   editingTodo: Todo | null;
+  //   //   handleEditTodo: (todo: Todo) => void;
+  //   setEditingTodo: React.Dispatch<React.SetStateAction<Todo | null>>;
   editingTodo: null,
   //   handleEditTodo: () => {},
   setEditingTodo: () => {},

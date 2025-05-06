@@ -21,7 +21,7 @@ import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import TodoItem from "./TodoItem";
 import TaskDetailsSidebar from "./TaskDetailsSidebar";
-import { useGlobalContext } from "./context/GlobalContext";
+import { useGlobalContext } from "../context/GlobalContext";
 
 interface TodoListProps {
   todos: Todo[];

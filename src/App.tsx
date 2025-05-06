@@ -13,7 +13,7 @@ import { useNotifications } from "./hooks/useNotifications";
 import { User } from "./types/user";
 import { todoService } from "./services/todoService";
 import { authService } from "./services/authService";
-import { useGlobalContext } from "./components/context/GlobalContext";
+import { useGlobalContext } from "./context/GlobalContext";
 
 // Define action types for the reducer
 type TodoAction =
