@@ -16,29 +16,47 @@ import {
   CalendarWeekStartRegular,
 } from "@fluentui/react-icons";
 import { TooltipIcon } from "./TooltipIcon";
+import { Todo } from "../types/todo";
 
 interface SidebarProps {
   toggleSidebar: () => void;
+  todos: Todo[];
+  onStarredChange: (onlyStarred: boolean) => void;
+  onPlannedChange: (onlyStarred: boolean) => void;
+  filteredTodos: Todo[];
+  setFilteredTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ toggleSidebar }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  toggleSidebar,
+  todos,
+  onStarredChange,
+  onPlannedChange,
+  setFilteredTodos,
+}) => {
   const sidebarItems: SidebarItem[] = [
     {
       id: "my-day",
       icon: <WeatherSunnyRegular fontSize={20} />,
       label: "My Day",
+      count: todos.filter(
+        (todo) =>
+          !todo.completed &&
+          todo.dueDate?.toISOString().split("T")[0] ===
+            new Date().toISOString().split("T")[0]
+      ).length,
     },
     {
       id: "important",
       icon: <StarRegular fontSize={20} />,
       label: "Important",
-      count: 1,
+      count: todos.filter((todo) => !todo.completed && todo.isStarred).length,
     },
     {
       id: "planned",
       icon: <CalendarRegular fontSize={20} />,
       label: "Planned",
-      count: 3,
+      count: todos.filter((todo) => !todo.completed && todo.dueDate).length,
     },
     {
       id: "assigned",
@@ -49,7 +67,7 @@ const Sidebar: React.FC<SidebarProps> = ({ toggleSidebar }) => {
       id: "tasks",
       icon: <HomeRegular fontSize={20} />,
       label: "Tasks",
-      count: 8,
+      count: todos.filter((todo) => !todo.completed).length,
       isActive: true,
     },
   ];
@@ -68,10 +86,32 @@ const Sidebar: React.FC<SidebarProps> = ({ toggleSidebar }) => {
       <div className="mb-2 overflow-y-auto">
         <ul>
           {sidebarItems.map((item) => (
-            <li key={item.id}>
-              <a
-                href="#"
-                className={`flex items-center px-4 py-2 text-sm ${
+            <button key={item.id} className="w-full">
+              <div
+                onClick={() => {
+                  if (item.id === "important") {
+                    setFilteredTodos(
+                      todos.filter((todo) => !todo.completed && todo.isStarred)
+                    );
+                  } else if (item.id === "planned") {
+                    setFilteredTodos(
+                      todos.filter(
+                        (todo) => !todo.completed && todo.dueDate !== undefined
+                      )
+                    );
+                  } else if (item.id === "my-day") {
+                    setFilteredTodos(
+                      todos.filter(
+                        (todo) =>
+                          todo.dueDate?.toISOString().split("T")[0] ===
+                          new Date().toISOString().split("T")[0]
+                      )
+                    );
+                  } else {
+                    setFilteredTodos(todos);
+                  }
+                }}
+                className={`w-full flex items-center px-4 py-2 text-sm ${
                   item.isActive
                     ? "bg-blue-50 border-l-4 border-blue-600 font-semibold"
                     : "text-gray-700 hover:bg-gray-100"
@@ -79,11 +119,11 @@ const Sidebar: React.FC<SidebarProps> = ({ toggleSidebar }) => {
               >
                 <span className="mr-3 text-gray-500">{item.icon}</span>
                 <span>{item.label}</span>
-                {item.count !== undefined && (
+                {item.count !== undefined && item.count !== 0 && (
                   <span className="ml-auto">{item.count}</span>
                 )}
-              </a>
-            </li>
+              </div>
+            </button>
           ))}
         </ul>
       </div>

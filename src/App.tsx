@@ -79,6 +79,8 @@ const App: React.FC = () => {
   const [priorityFilter, setPriorityFilter] = useState<Priority | "all">("all");
   const [categoryFilter, setCategoryFilter] = useState<Category | "all">("all");
   const [onlyStarred, setOnlyStarred] = useState(false);
+  const [onlyPlanned, setOnlyPlanned] = useState(false);
+  const [filteredTodos, setFilteredTodos] = useState<Todo[]>(todos);
 
   // State for user
   const [user, setUser] = useState<User | null>(null);
@@ -366,7 +368,16 @@ const App: React.FC = () => {
             : "opacity-0 hidden"
         }`}
       />
-      {showSidebar && <Sidebar toggleSidebar={toggleSidebar} />}
+      {showSidebar && (
+        <Sidebar
+          toggleSidebar={toggleSidebar}
+          todos={todos}
+          onStarredChange={setOnlyStarred}
+          onPlannedChange={setOnlyPlanned}
+          filteredTodos={filteredTodos}
+          setFilteredTodos={setFilteredTodos}
+        />
+      )}
 
       <div className="flex-1 flex flex-col overflow-hidden px-8">
         <TaskHeader
@@ -390,12 +401,15 @@ const App: React.FC = () => {
             priority: priorityFilter,
             category: categoryFilter,
             onlyStarred,
+            onlyPlanned,
           }}
           onToggleComplete={handleToggleComplete}
           onToggleStar={handleToggleStar}
           onUpdateTodo={handleUpdateTodo}
           onDeleteTodo={handleDeleteTodo}
           onReorderTodos={handleReorderTodos}
+          filteredTodos={filteredTodos}
+          setFilteredTodos={setFilteredTodos}
         />
       </div>
 
