@@ -26,7 +26,6 @@ interface TodoItemProps {
   viewMode?: "grid" | "list";
   onTaskSelect: (todo: Todo) => void;
   selectedTaskId?: string;
-  showCompleted?: boolean;
 }
 
 const TodoItem: React.FC<TodoItemProps> = ({
@@ -38,7 +37,6 @@ const TodoItem: React.FC<TodoItemProps> = ({
   viewMode,
   onTaskSelect,
   selectedTaskId,
-  showCompleted,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 

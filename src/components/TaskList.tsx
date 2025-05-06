@@ -7,6 +7,8 @@ import {
   StarFilled,
   CircleRegular,
   CheckmarkCircleRegular,
+  IosChevronRightRegular,
+  ChevronDownRegular,
 } from "@fluentui/react-icons";
 import { TooltipIcon } from "./TooltipIcon";
 import TaskCompleteCheckMark from "./TaskCompleteCheckMark";
@@ -62,6 +64,7 @@ const DraggableTodoItem: React.FC<DraggableTodoItemProps> = ({
   viewMode,
   onTaskSelect,
   selectedTaskId,
+  showCompleted,
 }) => {
   const [{ isDragging }, drag] = useDrag({
     type: "TODO_ITEM",
@@ -88,7 +91,9 @@ const DraggableTodoItem: React.FC<DraggableTodoItemProps> = ({
         }
       }}
       style={{ opacity: isDragging ? 0.5 : 1 }}
-      className={`${viewMode === "grid" && "border-b h-10"}`}
+      className={`${showCompleted && "hidden"} ${
+        viewMode === "grid" && "border-b h-10"
+      }`}
     >
       <TodoItem
         todo={todo}
@@ -144,7 +149,7 @@ const TaskList: React.FC<TaskListProps> = ({
   // const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
   const { editingTodo, setEditingTodo } = useGlobalContext();
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
-  const [showCompleted, setShowCompleted] = useState<boolean>(true);
+  const [showCompleted, setShowCompleted] = useState<boolean>(false);
 
   // Apply filters to todos
   useEffect(() => {
@@ -244,8 +249,18 @@ const TaskList: React.FC<TaskListProps> = ({
                 ))}
               {filteredTodos.some((todo) => todo.completed === true) && (
                 <>
-                  <div className=" flex items-center gap-2">
-                    <p>Completed</p>{" "}
+                  <div className=" flex items-center gap-3 py-3">
+                    <button
+                      onClick={() => setShowCompleted(!showCompleted)}
+                      className="mr-2"
+                    >
+                      {showCompleted ? (
+                        <IosChevronRightRegular fontSize={20} />
+                      ) : (
+                        <ChevronDownRegular fontSize={20} />
+                      )}
+                    </button>
+                    <p className="font-medium">Completed</p>{" "}
                     <span>
                       {
                         filteredTodos.filter((todo) => todo.completed === true)
@@ -253,6 +268,7 @@ const TaskList: React.FC<TaskListProps> = ({
                       }
                     </span>
                   </div>
+                  {/* <div className={`${!showCompleted && "hidden"} w-full`}> */}
                   {filteredTodos
                     .filter((todo) => todo.completed === true)
                     .map((todo, index) => (
@@ -271,6 +287,7 @@ const TaskList: React.FC<TaskListProps> = ({
                         showCompleted={showCompleted}
                       />
                     ))}
+                  {/* </div> */}
                 </>
               )}
               {/* {filteredTodos.map((todo, index) => (
@@ -288,50 +305,6 @@ const TaskList: React.FC<TaskListProps> = ({
                   onTaskSelect={onTaskSelect}
                 />
               ))} */}
-              {/* {tasks.map((task) => (
-              <tr key={task.id} className={`border-b h-10  `}>
-                <td className="py-1 px-4" onClick={(e) => e.stopPropagation()}>
-                  <TaskCompleteCheckMark
-                    task={task}
-                    toggleTaskCompletion={toggleTaskCompletion}
-                    className="hover:border border-gray-400 p-1 w-8"
-                  />
-                </td>
-                <td
-                  className={`py-1 px-4 text-sm hover:border-2 hover:border-gray-400 ${
-                    selectedTaskId === task.id
-                      ? "border-2 border-blue-600 hover:border-blue-600"
-                      : ""
-                  }`}
-                  onClick={() => onTaskSelect(task)}
-                >
-                  {task.title}
-                </td>
-                <td className="py-1 px-4 text-sm text-red-500">
-                  {task.dueDate}
-                </td>
-                <td className="py-1 px-4" onClick={(e) => e.stopPropagation()}>
-                  <button
-                    onClick={() => toggleTaskImportance(task.id)}
-                    className="text-gray-400 hover:text-blue-600 hover:border border-gray-400 px-2"
-                  >
-                    {task.isImportant ? (
-                      <TooltipIcon
-                        icon={StarFilled}
-                        tooltipText="Remove importance"
-                        className="text-blue-600"
-                      />
-                    ) : (
-                      <TooltipIcon
-                        icon={StarRegular}
-                        tooltipText="Mark task as important"
-                        className="text-blue-600"
-                      />
-                    )}
-                  </button>
-                </td>
-              </tr>
-            ))} */}
             </tbody>
           </table>
         ) : (
@@ -354,9 +327,28 @@ const TaskList: React.FC<TaskListProps> = ({
                 />
               ))}
             {filteredTodos.some((todo) => todo.completed === true) && (
+              // <div
+              //   className={`${
+              //     !showCompleted ? "hidden" : "flex"
+              //   } w-full flex-col gap-2`}
+              // >
               <>
-                <div className=" flex items-center gap-2">
-                  <p>Completed</p>{" "}
+                <div
+                  className={`flex items-center gap-3 py-3 ${
+                    showCompleted && "border-b"
+                  }`}
+                >
+                  <button
+                    onClick={() => setShowCompleted(!showCompleted)}
+                    className="mr-2"
+                  >
+                    {showCompleted ? (
+                      <IosChevronRightRegular fontSize={20} />
+                    ) : (
+                      <ChevronDownRegular fontSize={20} />
+                    )}
+                  </button>
+                  <p className="font-medium">Completed</p>{" "}
                   <span>
                     {
                       filteredTodos.filter((todo) => todo.completed === true)
@@ -364,6 +356,11 @@ const TaskList: React.FC<TaskListProps> = ({
                     }
                   </span>
                 </div>
+                {/* <div
+                  className={`${
+                    !showCompleted ? "hidden" : "flex"
+                  } w-full flex-col gap-2`}
+                > */}
                 {filteredTodos
                   .filter((todo) => todo.completed === true)
                   .map((todo, index) => (
@@ -382,7 +379,9 @@ const TaskList: React.FC<TaskListProps> = ({
                       showCompleted={showCompleted}
                     />
                   ))}
+                {/* </div> */}
               </>
+              // </div>
             )}
             {/* {filteredTodos.map((todo, index) => (
               <DraggableTodoItem
@@ -399,115 +398,9 @@ const TaskList: React.FC<TaskListProps> = ({
                 onTaskSelect={onTaskSelect}
               />
             ))} */}
-            {/* {tasks.map((task) => (
-              <article
-                key={task.id}
-                className={`flex justify-between px-4 items-center h-14 shadow-md bg-white hover:bg-gray-100 cursor-pointer ${
-                  selectedTaskId === task.id
-                    ? "bg-blue-300 hover:bg-blue-300"
-                    : ""
-                }`}
-                onClick={() => onTaskSelect(task)}
-              >
-                <div className="flex items-center gap-2">
-                  <div className="" onClick={(e) => e.stopPropagation()}>
-                    <TaskCompleteCheckMark
-                      todo={task}
-                      toggleTaskCompletion={toggleTaskCompletion}
-                      className=""
-                    />
-                  </div>
-                  <div>
-                    <div className={` text-sm `}>{task.title}</div>
-                    <p className=" text-xs text-red-500">{task.dueDate}</p>
-                  </div>
-                </div>
-                <div className="" onClick={(e) => e.stopPropagation()}>
-                  <button
-                    onClick={() => toggleTaskImportance(task.id)}
-                    className="text-gray-400 hover:text-blue-600 "
-                  >
-                    {task.isImportant ? (
-                      <TooltipIcon
-                        icon={StarFilled}
-                        tooltipText="Remove importance"
-                        className="text-blue-600"
-                        tipClassName="left-0 -translate-x-full"
-                      />
-                    ) : (
-                      <TooltipIcon
-                        icon={StarRegular}
-                        tooltipText="Mark task as important"
-                        className="text-blue-600"
-                        tipClassName="left-0 -translate-x-full"
-                      />
-                    )}
-                  </button>
-                </div>
-              </article>
-            ))} */}
           </div>
         )}
-        {/* <table className="min-w-full bg-white shadow-lg">
-        <thead className=" border-b">
-          <tr>
-            <th className="text-left py-3 px-4 font-normal text-sm text-gray-600 w-8"></th>
-            <th className="text-left py-3 px-4 font-normal text-sm text-gray-600">
-              Title
-            </th>
-            <th className="text-left py-3 px-4 font-normal text-sm text-gray-600">
-              Due Date
-            </th>
-            <th className="text-left py-3 px-4 font-normal text-sm text-gray-600">
-              Importance
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {tasks.map((task) => (
-            <tr key={task.id} className={`border-b h-10  `}>
-              <td className="py-1 px-4" onClick={(e) => e.stopPropagation()}>
-                <TaskCompleteCheckMark
-                  task={task}
-                  toggleTaskCompletion={toggleTaskCompletion}
-                  className="hover:border border-gray-400 p-1 w-8"
-                />
-              </td>
-              <td
-                className={`py-1 px-4 text-sm hover:border-2 hover:border-gray-400 ${
-                  selectedTaskId === task.id
-                    ? "border-2 border-blue-600 hover:border-blue-600"
-                    : ""
-                }`}
-                onClick={() => onTaskSelect(task)}
-              >
-                {task.title}
-              </td>
-              <td className="py-1 px-4 text-sm text-red-500">{task.dueDate}</td>
-              <td className="py-1 px-4" onClick={(e) => e.stopPropagation()}>
-                <button
-                  onClick={() => toggleTaskImportance(task.id)}
-                  className="text-gray-400 hover:text-blue-600 hover:border border-gray-400 px-2"
-                >
-                  {task.isImportant ? (
-                    <TooltipIcon
-                      icon={StarFilled}
-                      tooltipText="Remove importance"
-                      className="text-blue-600"
-                    />
-                  ) : (
-                    <TooltipIcon
-                      icon={StarRegular}
-                      tooltipText="Mark task as important"
-                      className="text-blue-600"
-                    />
-                  )}
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table> */}
+
         {editingTodo && (
           <TaskDetailsSidebar
             todo={editingTodo}
