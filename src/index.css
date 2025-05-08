@@ -165,38 +165,6 @@ body {
   margin-bottom: 1.5rem;
 }
 
-.search-container {
-  position: relative;
-  /* margin-bottom: 1rem; */
-}
-
-.search-icon {
-  position: absolute;
-  left: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-light);
-}
-
-.search-input {
-  width: 100%;
-  padding: 0.1rem 2rem;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  font-size: 0.9rem;
-}
-
-.clear-search-btn {
-  position: absolute;
-  right: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: var(--text-light);
-  cursor: pointer;
-}
-
 .filters-controls {
   display: flex;
   flex-direction: column;

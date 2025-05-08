@@ -389,7 +389,7 @@ const App: React.FC = () => {
         }`}
       />
 
-      <Navbar />
+      <Navbar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
       <div className="w-full flex">
         {/* sidebar */}
         {showSidebar && (

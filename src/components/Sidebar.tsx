@@ -115,10 +115,10 @@ const Sidebar: React.FC<SidebarProps> = ({
     <aside className="fixed lg:relative left-0 top-[var(--navbar-height)] lg:top-0 w-56 bg-white border-r flex flex-col h-screen z-20">
       <div className="w-full p-4 flex items-center justify-between">
         <button className="" onClick={toggleSidebar}>
-          <NavigationRegular fontSize={20} className="text-gray-600" />
+          <NavigationRegular fontSize={22} className="text-black" />
         </button>
         <button className="">
-          <SettingsRegular fontSize={20} className="text-gray-600" />
+          <SettingsRegular fontSize={20} className="text-black" />
         </button>
       </div>
 
