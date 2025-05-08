@@ -14,29 +14,51 @@ import {
   HomeRegular,
   DualScreenGroupRegular,
   CalendarWeekStartRegular,
+  CheckmarkRegular,
+  CalendarMonthRegular,
+  StarFilled,
 } from "@fluentui/react-icons";
 import { TooltipIcon } from "./TooltipIcon";
 import { Todo } from "../types/todo";
+import { useMemo } from "react";
 
 interface SidebarProps {
   toggleSidebar: () => void;
   todos: Todo[];
-  onStarredChange: (onlyStarred: boolean) => void;
-  onPlannedChange: (onlyStarred: boolean) => void;
-  filteredTodos: Todo[];
-  setFilteredTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+  // filteredTodos: Todo[];
+  // setFilteredTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+  activeFilter: string;
+  onFilterChange: (filter: string) => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
   toggleSidebar,
   todos,
-  onStarredChange,
-  onPlannedChange,
-  setFilteredTodos,
+  // setFilteredTodos,
+  activeFilter,
+  onFilterChange,
 }) => {
+  // Calculate counts for each filter
+  // const counts = useMemo(() => {
+  //   const today = new Date();
+  //   today.setHours(0, 0, 0, 0);
+
+  //   return {
+  //     myDay: todos.filter((todo) => {
+  //       if (!todo.dueDate) return false;
+  //       const dueDate = new Date(todo.dueDate);
+  //       dueDate.setHours(0, 0, 0, 0);
+  //       return dueDate.getTime() === today.getTime();
+  //     }).length,
+  //     important: todos.filter((todo) => todo.isStarred).length,
+  //     planned: todos.filter((todo) => todo.dueDate).length,
+  //     all: todos.length,
+  //   };
+  // }, [todos]);
+
   const sidebarItems: SidebarItem[] = [
     {
-      id: "my-day",
+      id: "myDay",
       icon: <WeatherSunnyRegular fontSize={20} />,
       label: "My Day",
       count: todos.filter(
@@ -64,7 +86,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       label: "Assigned to me",
     },
     {
-      id: "tasks",
+      id: "all",
       icon: <HomeRegular fontSize={20} />,
       label: "Tasks",
       count: todos.filter((todo) => !todo.completed).length,
@@ -90,29 +112,23 @@ const Sidebar: React.FC<SidebarProps> = ({
               <div
                 onClick={() => {
                   if (item.id === "important") {
-                    setFilteredTodos(
-                      todos.filter((todo) => !todo.completed && todo.isStarred)
-                    );
+                    onFilterChange("important");
                   } else if (item.id === "planned") {
-                    setFilteredTodos(
-                      todos.filter(
-                        (todo) => !todo.completed && todo.dueDate !== undefined
-                      )
-                    );
-                  } else if (item.id === "my-day") {
-                    setFilteredTodos(
-                      todos.filter(
-                        (todo) =>
-                          todo.dueDate?.toISOString().split("T")[0] ===
-                          new Date().toISOString().split("T")[0]
-                      )
-                    );
+                    onFilterChange("planned");
+                  } else if (item.id === "myDay") {
+                    onFilterChange("myDay");
+                  } else if (item.id === "assigned") {
+                    onFilterChange("assigned");
                   } else {
-                    setFilteredTodos(todos);
+                    onFilterChange("all");
+                  }
+                  if (window.innerWidth < 1024) {
+                    // close the sidebar on mobile
+                    toggleSidebar();
                   }
                 }}
                 className={`w-full flex items-center px-4 py-2 text-sm ${
-                  item.isActive
+                  activeFilter === item.id
                     ? "bg-blue-50 border-l-4 border-blue-600 font-semibold"
                     : "text-gray-700 hover:bg-gray-100"
                 }`}

@@ -79,8 +79,11 @@ const App: React.FC = () => {
   const [priorityFilter, setPriorityFilter] = useState<Priority | "all">("all");
   const [categoryFilter, setCategoryFilter] = useState<Category | "all">("all");
   const [onlyStarred, setOnlyStarred] = useState(false);
-  const [onlyPlanned, setOnlyPlanned] = useState(false);
-  const [filteredTodos, setFilteredTodos] = useState<Todo[]>(todos);
+  // const [onlyPlanned, setOnlyPlanned] = useState(false);
+  // const [filteredTodos, setFilteredTodos] = useState<Todo[]>(todos);
+
+  // New state for sidebar navigation
+  const [activeNavFilter, setActiveNavFilter] = useState("all");
 
   // State for user
   const [user, setUser] = useState<User | null>(null);
@@ -202,6 +205,7 @@ const App: React.FC = () => {
     setPriorityFilter("all");
     setCategoryFilter("all");
     setOnlyStarred(false);
+    setActiveNavFilter("all");
   };
 
   // Handle user login
@@ -222,6 +226,58 @@ const App: React.FC = () => {
     } catch (error) {
       console.error("Error logging out:", error);
     }
+  };
+
+  // Handle sidebar navigation filter change
+  const handleNavFilterChange = (filter: string) => {
+    setActiveNavFilter(filter);
+
+    // Reset other filters
+    setSearchTerm("");
+    setPriorityFilter("all");
+    setCategoryFilter("all");
+
+    // Set appropriate filters based on navigation selection
+    if (filter === "myDay") {
+      setShowCompleted(true);
+      setOnlyStarred(false);
+    } else if (filter === "important") {
+      setShowCompleted(false);
+      setOnlyStarred(true);
+    } else if (filter === "planned") {
+      setShowCompleted(true);
+      setOnlyStarred(false);
+    } else if (filter === "all") {
+      setShowCompleted(true);
+      setOnlyStarred(false);
+    }
+  };
+
+  // Filter todos based on active navigation filter
+  const getFilteredTodos = () => {
+    let filteredTodos = [...todos];
+
+    // Apply navigation filters
+    if (activeNavFilter === "myDay") {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      filteredTodos = filteredTodos.filter((todo) => {
+        if (!todo.dueDate) return false;
+        const dueDate = new Date(todo.dueDate);
+        dueDate.setHours(0, 0, 0, 0);
+        return dueDate.getTime() === today.getTime();
+      });
+    } else if (activeNavFilter === "important") {
+      filteredTodos = filteredTodos.filter((todo) => todo.isStarred);
+    } else if (activeNavFilter === "planned") {
+      filteredTodos = filteredTodos.filter((todo) => todo.dueDate);
+    } else if (activeNavFilter === "assigned") {
+      // For now, just return all tasks
+      filteredTodos = filteredTodos;
+    }
+
+    return filteredTodos;
   };
 
   const initialTasks: Task[] = [
@@ -372,10 +428,10 @@ const App: React.FC = () => {
         <Sidebar
           toggleSidebar={toggleSidebar}
           todos={todos}
-          onStarredChange={setOnlyStarred}
-          onPlannedChange={setOnlyPlanned}
-          filteredTodos={filteredTodos}
-          setFilteredTodos={setFilteredTodos}
+          // filteredTodos={filteredTodos}
+          // setFilteredTodos={setFilteredTodos}
+          activeFilter={activeNavFilter}
+          onFilterChange={handleNavFilterChange}
         />
       )}
 
@@ -394,22 +450,23 @@ const App: React.FC = () => {
           onTaskSelect={handleTaskSelect}
           selectedTaskId={selectedTask?.id}
           viewMode={viewMode}
-          todos={todos}
+          // todos={todos}
+          todos={getFilteredTodos()}
           filter={{
             searchTerm,
             showCompleted,
             priority: priorityFilter,
             category: categoryFilter,
             onlyStarred,
-            onlyPlanned,
+            // onlyPlanned,
           }}
           onToggleComplete={handleToggleComplete}
           onToggleStar={handleToggleStar}
           onUpdateTodo={handleUpdateTodo}
           onDeleteTodo={handleDeleteTodo}
           onReorderTodos={handleReorderTodos}
-          filteredTodos={filteredTodos}
-          setFilteredTodos={setFilteredTodos}
+          // filteredTodos={filteredTodos}
+          // setFilteredTodos={setFilteredTodos}
         />
       </div>
 

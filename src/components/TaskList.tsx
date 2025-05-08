@@ -123,15 +123,15 @@ interface TaskListProps {
     priority: Priority | "all";
     category: Category | "all";
     onlyStarred: boolean;
-    onlyPlanned: boolean;
+    // onlyPlanned: boolean;
   };
   onToggleComplete: (id: string) => void;
   onToggleStar: (id: string) => void;
   onUpdateTodo: (todo: Todo) => void;
   onDeleteTodo: (id: string) => void;
   onReorderTodos: (startIndex: number, endIndex: number) => void;
-  filteredTodos: Todo[];
-  setFilteredTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+  // filteredTodos: Todo[];
+  // setFilteredTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
 }
 
 const TaskList: React.FC<TaskListProps> = ({
@@ -148,12 +148,12 @@ const TaskList: React.FC<TaskListProps> = ({
   onUpdateTodo,
   onDeleteTodo,
   onReorderTodos,
-  filteredTodos,
-  setFilteredTodos,
+  // filteredTodos,
+  // setFilteredTodos,
 }) => {
   // const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
   const { editingTodo, setEditingTodo } = useGlobalContext();
-  // const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
+  const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
 
   // Apply filters to todos
@@ -161,44 +161,49 @@ const TaskList: React.FC<TaskListProps> = ({
     let result = [...todos];
 
     // Filter by search term
-    // if (filter.searchTerm) {
-    //   const searchLower = filter.searchTerm.toLowerCase();
-    //   result = result.filter(
-    //     (todo) =>
-    //       todo.title.toLowerCase().includes(searchLower) ||
-    //       (todo.description &&
-    //         todo.description.toLowerCase().includes(searchLower))
-    //   );
-    // }
+    if (filter.searchTerm) {
+      const searchLower = filter.searchTerm.toLowerCase();
+      result = result.filter(
+        (todo) =>
+          todo.title.toLowerCase().includes(searchLower) ||
+          (todo.description &&
+            todo.description.toLowerCase().includes(searchLower))
+      );
+    }
 
-    // // Filter by completion status
-    // if (!filter.showCompleted) {
-    //   result = result.filter((todo) => !todo.completed);
-    // }
+    // Filter by completion status
+    if (!filter.showCompleted) {
+      result = result.filter((todo) => !todo.completed);
+    }
 
-    // // Filter by priority
-    // if (filter.priority !== "all") {
-    //   result = result.filter((todo) => todo.priority === filter.priority);
-    // }
+    // Filter by priority
+    if (filter.priority !== "all") {
+      result = result.filter((todo) => todo.priority === filter.priority);
+    }
 
-    // // Filter by category
-    // if (filter.category !== "all") {
-    //   result = result.filter((todo) => todo.category === filter.category);
-    // }
+    // Filter by category
+    if (filter.category !== "all") {
+      result = result.filter((todo) => todo.category === filter.category);
+    }
 
-    // // Filter by starred status
-    // if (filter.onlyStarred) {
-    //   result = result.filter((todo) => todo.isStarred);
-    // }
+    // Filter by starred status
+    if (filter.onlyStarred) {
+      result = result.filter((todo) => todo.isStarred);
+    }
 
-    // // Filter by planned
+    // Filter by planned
     // if (filter.onlyPlanned) {
     //   result = result.filter((todo) => todo.dueDate !== undefined);
     // }
     // console.log(result);
 
     setFilteredTodos(result);
-  }, [todos, setFilteredTodos]);
+  }, [
+    todos,
+    setFilteredTodos,
+    filter,
+    // filter.onlyPlanned,
+  ]);
 
   const handleEditTodo = (todo: Todo) => {
     setEditingTodo(todo);
