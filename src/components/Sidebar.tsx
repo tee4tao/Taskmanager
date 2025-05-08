@@ -20,10 +20,11 @@ import {
 } from "@fluentui/react-icons";
 import { TooltipIcon } from "./TooltipIcon";
 import { Todo } from "../types/todo";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 interface SidebarProps {
   toggleSidebar: () => void;
+  editingTodo: Todo | null;
   todos: Todo[];
   // filteredTodos: Todo[];
   // setFilteredTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
@@ -33,6 +34,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({
   toggleSidebar,
+  editingTodo,
   todos,
   // setFilteredTodos,
   activeFilter,
@@ -94,8 +96,23 @@ const Sidebar: React.FC<SidebarProps> = ({
     },
   ];
 
+  // To close the sidebar when the screen sizes less than lg and a todo is being edited
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024 && editingTodo) {
+        toggleSidebar();
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [editingTodo, toggleSidebar]);
+
   return (
-    <aside className="w-56 bg-white border-r flex flex-col h-screen z-20">
+    <aside className="fixed lg:relative left-0 top-[var(--navbar-height)] lg:top-0 w-56 bg-white border-r flex flex-col h-screen z-20">
       <div className="w-full p-4 flex items-center justify-between">
         <button className="" onClick={toggleSidebar}>
           <NavigationRegular fontSize={20} className="text-gray-600" />

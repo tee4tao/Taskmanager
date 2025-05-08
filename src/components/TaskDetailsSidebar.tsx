@@ -86,7 +86,7 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
   };
 
   return (
-    <div className="w-80 border-l min-h-screen flex flex-col justify-between bg-white z-20 fixed right-0 top-0">
+    <div className="w-80 border-l min-h-[calc(100dvh-var(--navbar-height))] flex flex-col justify-between bg-white z-20 fixed right-0 top-[var(--navbar-height)]">
       <form action="" onSubmit={handleSubmit}>
         {/* Header with task title */}
         <div className="flex items-center justify-between p-4 border-b">

@@ -153,8 +153,13 @@ const TaskList: React.FC<TaskListProps> = ({
   // setFilteredTodos,
 }) => {
   // const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
-  const { editingTodo, setEditingTodo, deleteModal, setDeleteModal } =
-    useTodoContext();
+  const {
+    editingTodo,
+    setEditingTodo,
+    deleteModal,
+    setDeleteModal,
+    handleCloseModal,
+  } = useTodoContext();
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
 
@@ -214,9 +219,9 @@ const TaskList: React.FC<TaskListProps> = ({
     setEditingTodo(todo);
   };
 
-  const handleCloseModal = () => {
-    setEditingTodo(null);
-  };
+  // const handleCloseModal = () => {
+  //   setEditingTodo(null);
+  // };
 
   const handleSaveTodo = (updatedTodo: Todo) => {
     onUpdateTodo(updatedTodo);

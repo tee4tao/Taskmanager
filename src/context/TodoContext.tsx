@@ -6,6 +6,7 @@ interface TodoContextType {
   setEditingTodo: React.Dispatch<React.SetStateAction<Todo | null>>;
   deleteModal: boolean;
   setDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
+  handleCloseModal: () => void;
 }
 
 const TodoContext = createContext<TodoContextType>({
@@ -17,12 +18,16 @@ const TodoContext = createContext<TodoContextType>({
   setEditingTodo: () => {},
   deleteModal: false,
   setDeleteModal: () => {},
+  handleCloseModal: () => {},
 });
 
 export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
   const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
   // State for delete modal
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
+  const handleCloseModal = () => {
+    setEditingTodo(null);
+  };
 
   //   const handleEditTodo = (todo: Todo) => {
   //     setEditingTodo(todo);
@@ -32,7 +37,13 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
   //   };
   return (
     <TodoContext.Provider
-      value={{ editingTodo, setEditingTodo, deleteModal, setDeleteModal }}
+      value={{
+        editingTodo,
+        setEditingTodo,
+        deleteModal,
+        setDeleteModal,
+        handleCloseModal,
+      }}
     >
       {children}
     </TodoContext.Provider>

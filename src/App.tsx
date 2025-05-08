@@ -14,6 +14,7 @@ import { User } from "./types/user";
 import { todoService } from "./services/todoService";
 import { authService } from "./services/authService";
 import { useTodoContext } from "./context/TodoContext";
+import Navbar from "./components/Navbar";
 
 // Define action types for the reducer
 type TodoAction =
@@ -372,67 +373,70 @@ const App: React.FC = () => {
   };
 
   return (
-    <main className="flex min-h-screen bg-gray-50">
+    <main className="flex flex-col min-h-screen bg-gray-50">
       <div
         className={`${
           showSidebar
-            ? "block lg:hidden opacity-100 fixed inset-0 w-full h-full bg-[#0000008e]  transition-all duration-300 z-10"
+            ? "block lg:hidden opacity-100 fixed top-[var(--navbar-height)] w-full h-full bg-[#0000008e]  transition-all duration-300 z-10"
             : "opacity-0 hidden"
         }`}
       />
       <div
         className={`${
           editingTodo
-            ? "block lg:hidden opacity-100 fixed inset-0 w-full h-full bg-[#0000008e]  transition-all duration-300 z-10"
+            ? "block lg:hidden opacity-100 fixed top-[var(--navbar-height)] w-full h-full bg-[#0000008e]  transition-all duration-300 z-10"
             : "opacity-0 hidden"
         }`}
       />
 
-      {/* sidebar */}
-      {showSidebar && (
-        <Sidebar
-          toggleSidebar={toggleSidebar}
-          todos={todos}
-          // filteredTodos={filteredTodos}
-          // setFilteredTodos={setFilteredTodos}
-          activeFilter={activeNavFilter}
-          onFilterChange={handleNavFilterChange}
-        />
-      )}
-
-      <div className="flex-1 flex flex-col overflow-hidden px-8">
-        <TaskHeader
-          toggleSidebar={toggleSidebar}
-          viewMode={viewMode}
-          toggleViewMode={toggleViewMode}
-          showSidebar={showSidebar}
-        />
-        <TaskInput onAddTodo={handleAddTodo} />
-        <TaskList
-          tasks={tasks}
-          // toggleTaskImportance={toggleTaskImportance}
-          // toggleTaskCompletion={toggleTaskCompletion}
-          onTaskSelect={handleTaskSelect}
-          selectedTaskId={selectedTask?.id}
-          viewMode={viewMode}
-          // todos={todos}
-          todos={getFilteredTodos()}
-          filter={{
-            searchTerm,
-            showCompleted,
-            priority: priorityFilter,
-            category: categoryFilter,
-            onlyStarred,
-            // onlyPlanned,
-          }}
-          onToggleComplete={handleToggleComplete}
-          onToggleStar={handleToggleStar}
-          onUpdateTodo={handleUpdateTodo}
-          onDeleteTodo={handleDeleteTodo}
-          onReorderTodos={handleReorderTodos}
-          // filteredTodos={filteredTodos}
-          // setFilteredTodos={setFilteredTodos}
-        />
+      <Navbar />
+      <div className="w-full flex">
+        {/* sidebar */}
+        {showSidebar && (
+          <Sidebar
+            toggleSidebar={toggleSidebar}
+            editingTodo={editingTodo}
+            todos={todos}
+            // filteredTodos={filteredTodos}
+            // setFilteredTodos={setFilteredTodos}
+            activeFilter={activeNavFilter}
+            onFilterChange={handleNavFilterChange}
+          />
+        )}
+        <div className="flex-1 flex flex-col overflow-hidden px-8">
+          <TaskHeader
+            toggleSidebar={toggleSidebar}
+            viewMode={viewMode}
+            toggleViewMode={toggleViewMode}
+            showSidebar={showSidebar}
+          />
+          <TaskInput onAddTodo={handleAddTodo} />
+          <TaskList
+            tasks={tasks}
+            // toggleTaskImportance={toggleTaskImportance}
+            // toggleTaskCompletion={toggleTaskCompletion}
+            onTaskSelect={handleTaskSelect}
+            selectedTaskId={selectedTask?.id}
+            viewMode={viewMode}
+            // todos={todos}
+            todos={getFilteredTodos()}
+            filter={{
+              searchTerm,
+              showCompleted,
+              priority: priorityFilter,
+              category: categoryFilter,
+              onlyStarred,
+              // onlyPlanned,
+            }}
+            onToggleComplete={handleToggleComplete}
+            onToggleStar={handleToggleStar}
+            onUpdateTodo={handleUpdateTodo}
+            onDeleteTodo={handleDeleteTodo}
+            onReorderTodos={handleReorderTodos}
+            // filteredTodos={filteredTodos}
+            // setFilteredTodos={setFilteredTodos}
+          />
+        </div>
       </div>
 
       {/* {selectedTask && (
