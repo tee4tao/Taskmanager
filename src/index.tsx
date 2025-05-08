@@ -3,16 +3,16 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { GlobalProvider } from "./context/GlobalContext";
+import { TodoProvider } from "./context/TodoContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <GlobalProvider>
+    <TodoProvider>
       <App />
-    </GlobalProvider>
+    </TodoProvider>
   </React.StrictMode>
 );
 

@@ -13,7 +13,7 @@ import { useNotifications } from "./hooks/useNotifications";
 import { User } from "./types/user";
 import { todoService } from "./services/todoService";
 import { authService } from "./services/authService";
-import { useGlobalContext } from "./context/GlobalContext";
+import { useTodoContext } from "./context/TodoContext";
 
 // Define action types for the reducer
 type TodoAction =
@@ -82,7 +82,7 @@ const App: React.FC = () => {
   // const [onlyPlanned, setOnlyPlanned] = useState(false);
   // const [filteredTodos, setFilteredTodos] = useState<Todo[]>(todos);
 
-  // New state for sidebar navigation
+  // State for sidebar navigation
   const [activeNavFilter, setActiveNavFilter] = useState("all");
 
   // State for user
@@ -365,48 +365,11 @@ const App: React.FC = () => {
     setViewMode(mode);
   };
 
-  const { editingTodo } = useGlobalContext();
-
-  // const toggleTaskImportance = (taskId: number) => {
-  //   setTasks(
-  //     tasks.map((task) =>
-  //       task.id === taskId ? { ...task, isImportant: !task.isImportant } : task
-  //     )
-  //   );
-  //   if (selectedTask && selectedTask.id === taskId) {
-  //     setSelectedTask({
-  //       ...selectedTask,
-  //       isImportant: !selectedTask.isImportant,
-  //     });
-  //   }
-  // };
-
-  // const toggleTaskCompletion = (taskId: number) => {
-  //   setTasks(
-  //     tasks.map((task) =>
-  //       task.id === taskId ? { ...task, isCompleted: !task.isCompleted } : task
-  //     )
-  //   );
-  //   if (selectedTask && selectedTask.id === taskId) {
-  //     setSelectedTask({
-  //       ...selectedTask,
-  //       isCompleted: !selectedTask.isCompleted,
-  //     });
-  //   }
-  // };
+  const { editingTodo } = useTodoContext();
 
   const handleTaskSelect = (todo: Todo) => {
     setSelectedTask(todo);
   };
-
-  // const handleTaskUpdate = (taskId: number, updates: Partial<Task>) => {
-  //   setTasks(
-  //     tasks.map((task) => (task.id === taskId ? { ...task, ...updates } : task))
-  //   );
-  //   if (selectedTask && selectedTask.id === taskId) {
-  //     setSelectedTask({ ...selectedTask, ...updates });
-  //   }
-  // };
 
   return (
     <main className="flex min-h-screen bg-gray-50">
@@ -424,6 +387,8 @@ const App: React.FC = () => {
             : "opacity-0 hidden"
         }`}
       />
+
+      {/* sidebar */}
       {showSidebar && (
         <Sidebar
           toggleSidebar={toggleSidebar}

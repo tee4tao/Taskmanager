@@ -26,6 +26,7 @@ import {
 import { TooltipIcon } from "./TooltipIcon";
 import { Category, Priority, Todo } from "../types/todo";
 import TaskCompleteCheckMark from "./TaskCompleteCheckMark";
+import { useTodoContext } from "../context/TodoContext";
 
 interface TaskDetailsSidebarProps {
   todo: Todo;
@@ -51,6 +52,7 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
   const [completed, setCompleted] = useState<boolean>(todo.completed);
   const [isStarred, setIsStarred] = useState<boolean>(todo.isStarred);
   const [animateComplete, setAnimateComplete] = useState<boolean>(false);
+  const { setDeleteModal } = useTodoContext();
 
   if (!todo) return null;
 
@@ -285,8 +287,17 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
           onClick={onClose}
         />
         <div>Created on Wed, April 23</div>
-        <button className="text-gray-500 hover:text-red-600">
-          <DeleteRegular fontSize={16} />
+        <button
+          className="text-gray-500 hover:text-red-600"
+          onClick={() => setDeleteModal(true)}
+        >
+          <TooltipIcon
+            icon={DeleteRegular}
+            tooltipText="Delete task"
+            tipClassName="left-1/2 -translate-x-full bottom-full"
+            // onClick={onClose}
+          />
+          {/* <DeleteRegular fontSize={20} /> */}
         </button>
       </div>
     </div>

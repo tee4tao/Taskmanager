@@ -21,7 +21,8 @@ import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import TodoItem from "./TodoItem";
 import TaskDetailsSidebar from "./TaskDetailsSidebar";
-import { useGlobalContext } from "../context/GlobalContext";
+import { useTodoContext } from "../context/TodoContext";
+import DeletModal from "./DeletModal";
 
 interface TodoListProps {
   todos: Todo[];
@@ -45,7 +46,7 @@ interface DraggableTodoItemProps {
   onToggleComplete: (id: string) => void;
   onToggleStar: (id: string) => void;
   onEdit: (todo: Todo) => void;
-  onDelete: (id: string) => void;
+  // onDelete: (id: string) => void;
   onReorderTodos: (startIndex: number, endIndex: number) => void;
   viewMode: "grid" | "list";
   onTaskSelect: (todo: Todo) => void;
@@ -59,7 +60,7 @@ const DraggableTodoItem: React.FC<DraggableTodoItemProps> = ({
   onToggleComplete,
   onToggleStar,
   onEdit,
-  onDelete,
+  // onDelete,
   onReorderTodos,
   viewMode,
   onTaskSelect,
@@ -100,7 +101,7 @@ const DraggableTodoItem: React.FC<DraggableTodoItemProps> = ({
         onToggleComplete={onToggleComplete}
         onToggleStar={onToggleStar}
         onEdit={onEdit}
-        onDelete={onDelete}
+        // onDelete={onDelete}
         viewMode={viewMode}
         selectedTaskId={selectedTaskId}
         onTaskSelect={onTaskSelect}
@@ -152,9 +153,13 @@ const TaskList: React.FC<TaskListProps> = ({
   // setFilteredTodos,
 }) => {
   // const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
-  const { editingTodo, setEditingTodo } = useGlobalContext();
+  const { editingTodo, setEditingTodo, deleteModal, setDeleteModal } =
+    useTodoContext();
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
+
+  // State for delete modal
+  // const [deleteModal, setDeleteModal] = useState<boolean>(true);
 
   // Apply filters to todos
   useEffect(() => {
@@ -256,7 +261,7 @@ const TaskList: React.FC<TaskListProps> = ({
                     onToggleComplete={onToggleComplete}
                     onToggleStar={onToggleStar}
                     onEdit={handleEditTodo}
-                    onDelete={onDeleteTodo}
+                    // onDelete={onDeleteTodo}
                     onReorderTodos={onReorderTodos}
                     viewMode={viewMode}
                     selectedTaskId={selectedTaskId}
@@ -295,7 +300,7 @@ const TaskList: React.FC<TaskListProps> = ({
                         onToggleComplete={onToggleComplete}
                         onToggleStar={onToggleStar}
                         onEdit={handleEditTodo}
-                        onDelete={onDeleteTodo}
+                        // onDelete={onDeleteTodo}
                         onReorderTodos={onReorderTodos}
                         viewMode={viewMode}
                         selectedTaskId={selectedTaskId}
@@ -335,7 +340,7 @@ const TaskList: React.FC<TaskListProps> = ({
                   onToggleComplete={onToggleComplete}
                   onToggleStar={onToggleStar}
                   onEdit={handleEditTodo}
-                  onDelete={onDeleteTodo}
+                  // onDelete={onDeleteTodo}
                   onReorderTodos={onReorderTodos}
                   viewMode={viewMode}
                   selectedTaskId={selectedTaskId}
@@ -387,7 +392,7 @@ const TaskList: React.FC<TaskListProps> = ({
                       onToggleComplete={onToggleComplete}
                       onToggleStar={onToggleStar}
                       onEdit={handleEditTodo}
-                      onDelete={onDeleteTodo}
+                      // onDelete={onDeleteTodo}
                       onReorderTodos={onReorderTodos}
                       viewMode={viewMode}
                       selectedTaskId={selectedTaskId}
@@ -423,6 +428,15 @@ const TaskList: React.FC<TaskListProps> = ({
             onSave={handleSaveTodo}
             onClose={handleCloseModal}
             // onToggleComplete={onToggleComplete}
+          />
+        )}
+        {/* delete modal */}
+        {editingTodo && deleteModal && (
+          <DeletModal
+            todo={editingTodo}
+            onClose={handleCloseModal}
+            setDeleteModal={setDeleteModal}
+            onDelete={onDeleteTodo}
           />
         )}
       </section>

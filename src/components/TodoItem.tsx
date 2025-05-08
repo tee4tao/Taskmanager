@@ -22,7 +22,7 @@ interface TodoItemProps {
   onToggleComplete: (id: string) => void;
   onToggleStar: (id: string) => void;
   onEdit: (todo: Todo) => void;
-  onDelete: (id: string) => void;
+  // onDelete: (id: string) => void;
   viewMode?: "grid" | "list";
   onTaskSelect: (todo: Todo) => void;
   selectedTaskId?: string;
@@ -33,7 +33,7 @@ const TodoItem: React.FC<TodoItemProps> = ({
   onToggleComplete,
   onToggleStar,
   onEdit,
-  onDelete,
+  // onDelete,
   viewMode,
   onTaskSelect,
   selectedTaskId,
@@ -276,7 +276,7 @@ const TodoItem: React.FC<TodoItemProps> = ({
     //             </button>
     //             <button
     //               className="task-action-btn"
-    //               onClick={() => onDelete(todo.id)}
+    // onClick={() => onDelete(todo.id)}
     //               aria-label="Delete task"
     //             >
     //               <DeleteRegular />
