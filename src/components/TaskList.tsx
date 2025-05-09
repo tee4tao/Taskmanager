@@ -334,7 +334,7 @@ const TaskList: React.FC<TaskListProps> = ({
             </tbody>
           </table>
         ) : (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 mt-2">
             {filteredTodos
               .filter((todo) => todo.completed === false)
               .map((todo, index) => (

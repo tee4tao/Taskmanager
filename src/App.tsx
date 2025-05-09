@@ -90,13 +90,13 @@ const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
 
   // Get notifications using custom hook
-  const {
-    notifications,
-    markAsRead,
-    clearNotification,
-    clearAllNotifications,
-    unreadCount,
-  } = useNotifications(todos);
+  // const {
+  //   notifications,
+  //   markAsRead,
+  //   clearNotification,
+  //   clearAllNotifications,
+  //   unreadCount,
+  // } = useNotifications(todos);
 
   // Load todos from localStorage on initial render
   useEffect(() => {
@@ -389,7 +389,16 @@ const App: React.FC = () => {
         }`}
       />
 
-      <Navbar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+      <Navbar
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        todos={todos}
+        // notifications={notifications}
+        // unreadCount={unreadCount}
+        // onMarkAsRead={markAsRead}
+        // onClearNotification={clearNotification}
+        // onClearAll={clearAllNotifications}
+      />
       <div className="w-full flex">
         {/* sidebar */}
         {showSidebar && (

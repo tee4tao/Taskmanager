@@ -4,14 +4,39 @@ import {
   DismissRegular,
   SearchRegular,
 } from "@fluentui/react-icons";
+import Notifications from "./Notifications";
+import { useNotifications } from "../hooks/useNotifications";
+import { Todo } from "../types/todo";
 
 interface NavProps {
   searchTerm: string;
-
   onSearchChange: (term: string) => void;
+  todos: Todo[];
+  // notifications: Notification[];
+  // unreadCount: number;
+  // onMarkAsRead: (id: string) => void;
+  // onClearNotification: (id: string) => void;
+  // onClearAll: () => void;
 }
 
-const Navbar = ({ searchTerm, onSearchChange }: NavProps) => {
+const Navbar = ({
+  searchTerm,
+  onSearchChange,
+  todos,
+}: // notifications,
+// unreadCount,
+// onMarkAsRead,
+// onClearNotification,
+// onClearAll,
+NavProps) => {
+  const {
+    notifications,
+    markAsRead,
+    clearNotification,
+    clearAllNotifications,
+    unreadCount,
+  } = useNotifications(todos);
+
   useEffect(() => {
     const updateNavbarHeight = () => {
       const navbar = document.getElementById("navbar");
@@ -59,7 +84,14 @@ const Navbar = ({ searchTerm, onSearchChange }: NavProps) => {
         )}
       </div>
       <div className="flex items-center gap-4">
-        <AlertRegular fontSize={20} />
+        {/* <AlertRegular fontSize={20} /> */}
+        <Notifications
+          notifications={notifications}
+          unreadCount={unreadCount}
+          onMarkAsRead={markAsRead}
+          onClearNotification={clearNotification}
+          onClearAll={clearAllNotifications}
+        />
         <div className="border border-white rounded-full px-1">TA</div>
       </div>
     </nav>

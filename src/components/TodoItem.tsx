@@ -151,12 +151,14 @@ const TodoItem: React.FC<TodoItemProps> = ({
                   icon={StarFilled}
                   tooltipText="Remove importance"
                   className="text-blue-600"
+                  tipClassName="left-0 -translate-x-full bottom-full"
                 />
               ) : (
                 <TooltipIcon
                   icon={StarRegular}
                   tooltipText="Mark task as important"
                   className="text-blue-600"
+                  tipClassName="left-0 -translate-x-full bottom-full"
                 />
               )}
             </button>
@@ -226,14 +228,14 @@ const TodoItem: React.FC<TodoItemProps> = ({
                   icon={StarFilled}
                   tooltipText="Remove importance"
                   className="text-blue-600"
-                  tipClassName="left-0 -translate-x-full"
+                  tipClassName="left-0 -translate-x-full bottom-full"
                 />
               ) : (
                 <TooltipIcon
                   icon={StarRegular}
                   tooltipText="Mark task as important"
                   className="text-blue-600"
-                  tipClassName="left-0 -translate-x-full"
+                  tipClassName="left-0 -translate-x-full bottom-full"
                 />
               )}
             </button>
