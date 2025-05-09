@@ -8,13 +8,15 @@ import TaskList from "./components/TaskList";
 import TaskDetailsSidebar from "./components/TaskDetailsSidebar";
 import type { Task } from "./types";
 import TaskInput from "./components/TaskInput";
-import type { Todo, Priority, Category } from "./types/todo";
+import type { Todo, Category } from "./types/todo";
+import { Priority } from "./types/todo";
 import { useNotifications } from "./hooks/useNotifications";
 import { User } from "./types/user";
 import { todoService } from "./services/todoService";
 import { authService } from "./services/authService";
 import { useTodoContext } from "./context/TodoContext";
 import Navbar from "./components/Navbar";
+import { SortOption } from "./components/sortOptions";
 
 // Define action types for the reducer
 type TodoAction =
@@ -82,6 +84,10 @@ const App: React.FC = () => {
   const [onlyStarred, setOnlyStarred] = useState(false);
   // const [onlyPlanned, setOnlyPlanned] = useState(false);
   // const [filteredTodos, setFilteredTodos] = useState<Todo[]>(todos);
+
+  // State for sorting
+  const [sortOption, setSortOption] = useState<SortOption>("none");
+  const [sortAscending, setSortAscending] = useState(true);
 
   // State for sidebar navigation
   const [activeNavFilter, setActiveNavFilter] = useState("all");
@@ -209,6 +215,24 @@ const App: React.FC = () => {
     setActiveNavFilter("all");
   };
 
+  // Handle sort option change
+  const handleSortChange = (option: SortOption) => {
+    setSortOption(option);
+    // Reset to default direction when changing sort option
+    setSortAscending(option === "alphabetically");
+  };
+
+  // Handle toggling sort direction
+  const handleToggleSortDirection = () => {
+    setSortAscending(!sortAscending);
+  };
+
+  // Handle clearing sort
+  const handleClearSort = () => {
+    setSortOption("none");
+    setSortAscending(true);
+  };
+
   // Handle user login
   const handleLogin = async (username: string, password: string) => {
     try {
@@ -255,108 +279,31 @@ const App: React.FC = () => {
   };
 
   // Filter todos based on active navigation filter
-  const getFilteredTodos = () => {
-    let filteredTodos = [...todos];
+  // const getFilteredTodos = () => {
+  //   let filteredTodos = [...todos];
 
-    // Apply navigation filters
-    if (activeNavFilter === "myDay") {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+  //   // Apply navigation filters
+  //   if (activeNavFilter === "myDay") {
+  //     const today = new Date();
+  //     today.setHours(0, 0, 0, 0);
 
-      filteredTodos = filteredTodos.filter((todo) => {
-        if (!todo.dueDate) return false;
-        const dueDate = new Date(todo.dueDate);
-        dueDate.setHours(0, 0, 0, 0);
-        return dueDate.getTime() === today.getTime();
-      });
-    } else if (activeNavFilter === "important") {
-      filteredTodos = filteredTodos.filter((todo) => todo.isStarred);
-    } else if (activeNavFilter === "planned") {
-      filteredTodos = filteredTodos.filter((todo) => todo.dueDate);
-    } else if (activeNavFilter === "assigned") {
-      // For now, just return all tasks
-      filteredTodos = filteredTodos;
-    }
+  //     filteredTodos = filteredTodos.filter((todo) => {
+  //       if (!todo.dueDate) return false;
+  //       const dueDate = new Date(todo.dueDate);
+  //       dueDate.setHours(0, 0, 0, 0);
+  //       return dueDate.getTime() === today.getTime();
+  //     });
+  //   } else if (activeNavFilter === "important") {
+  //     filteredTodos = filteredTodos.filter((todo) => todo.isStarred);
+  //   } else if (activeNavFilter === "planned") {
+  //     filteredTodos = filteredTodos.filter((todo) => todo.dueDate);
+  //   } else if (activeNavFilter === "assigned") {
+  //     // For now, just return all tasks
+  //     filteredTodos = filteredTodos;
+  //   }
 
-    return filteredTodos;
-  };
-
-  const initialTasks: Task[] = [
-    {
-      id: 1,
-      title: "Category",
-      dueDate: "",
-      isImportant: false,
-      isCompleted: false,
-      notes: "",
-      category: "",
-    },
-    {
-      id: 2,
-      title: "Task0",
-      dueDate: "",
-      isImportant: true,
-      isCompleted: false,
-      notes: "",
-      category: "",
-    },
-    {
-      id: 3,
-      title: "Task6",
-      dueDate: "",
-      isImportant: false,
-      isCompleted: false,
-      notes: "",
-      category: "",
-    },
-    {
-      id: 4,
-      title: "Task5",
-      dueDate: "04/24/2025",
-      isImportant: false,
-      isCompleted: false,
-      notes: "",
-      category: "",
-    },
-    {
-      id: 5,
-      title: "Task4",
-      dueDate: "04/23/2025",
-      isImportant: false,
-      isCompleted: false,
-      notes: "",
-      category: "",
-    },
-    {
-      id: 6,
-      title: "Test1",
-      dueDate: "04/23/2025",
-      isImportant: false,
-      isCompleted: false,
-      notes: "",
-      category: "",
-    },
-    {
-      id: 7,
-      title: "Task3",
-      dueDate: "",
-      isImportant: false,
-      isCompleted: false,
-      notes: "",
-      category: "",
-    },
-    {
-      id: 8,
-      title: "Test2",
-      dueDate: "",
-      isImportant: false,
-      isCompleted: false,
-      notes: "testing 123",
-      category: "Red category",
-    },
-  ];
-
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  //   return filteredTodos;
+  // };
 
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
@@ -370,6 +317,105 @@ const App: React.FC = () => {
 
   const handleTaskSelect = (todo: Todo) => {
     setSelectedTask(todo);
+  };
+
+  // Sort todos based on current sort option and direction
+  const getSortedTodos = (todoList: Todo[]): Todo[] => {
+    if (sortOption === "none") return todoList;
+
+    const sorted = [...todoList];
+
+    switch (sortOption) {
+      case "importance":
+        sorted.sort((a, b) => {
+          // Sort by starred status first
+          if (a.isStarred !== b.isStarred) {
+            return a.isStarred ? -1 : 1;
+          }
+          // Then by priority
+          const priorityOrder = {
+            [Priority.High]: 0,
+            [Priority.Medium]: 1,
+            [Priority.Low]: 2,
+          };
+          return priorityOrder[a.priority] - priorityOrder[b.priority];
+        });
+        break;
+      case "dueDate":
+        sorted.sort((a, b) => {
+          // Tasks without due dates go to the end
+          if (!a.dueDate && !b.dueDate) return 0;
+          if (!a.dueDate) return 1;
+          if (!b.dueDate) return -1;
+          return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+        });
+        break;
+      case "addedToMyDay":
+        // This is a placeholder - in a real app, you'd have a "myDay" flag
+        // For now, we'll use isStarred as a substitute
+        sorted.sort((a, b) =>
+          a.isStarred === b.isStarred ? 0 : a.isStarred ? -1 : 1
+        );
+        break;
+      case "alphabetically":
+        sorted.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case "creationDate":
+        sorted.sort(
+          (a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+        break;
+    }
+
+    // Reverse the order if not ascending
+    return sortAscending ? sorted : sorted.reverse();
+  };
+  const getFilteredAndSortedTodos = () => {
+    // Filter todos based on active navigation filter
+    const getFilteredTodos = () => {
+      let filteredTodos = [...todos];
+
+      // Apply navigation filters
+      if (activeNavFilter === "myDay") {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        filteredTodos = filteredTodos.filter((todo) => {
+          if (!todo.dueDate) return false;
+          const dueDate = new Date(todo.dueDate);
+          dueDate.setHours(0, 0, 0, 0);
+          return dueDate.getTime() === today.getTime();
+        });
+      } else if (activeNavFilter === "important") {
+        filteredTodos = filteredTodos.filter((todo) => todo.isStarred);
+      } else if (activeNavFilter === "planned") {
+        filteredTodos = filteredTodos.filter((todo) => todo.dueDate);
+      } else if (activeNavFilter === "assigned") {
+        // For now, just return all tasks
+        filteredTodos = filteredTodos;
+      }
+
+      return filteredTodos;
+    };
+
+    // First apply the navigation filters
+    // const filteredTodos = todos.filter((todo) => {
+    //   const searchTextMatch = todo.title.toLowerCase().includes(searchTerm.toLowerCase())
+
+    //   const completedMatch = showCompleted || !todo.completed
+
+    //   const priorityMatch = priorityFilter === "all" || todo.priority === priorityFilter
+
+    //   const categoryMatch = categoryFilter === "all" || todo.category === categoryFilter
+
+    //   const starredMatch = !onlyStarred || todo.isStarred
+
+    //   return searchTextMatch && completedMatch && priorityMatch && categoryMatch && starredMatch
+    // })
+
+    // Then apply sorting to the filtered results
+    return getSortedTodos(getFilteredTodos());
   };
 
   return (
@@ -418,17 +464,21 @@ const App: React.FC = () => {
             viewMode={viewMode}
             toggleViewMode={toggleViewMode}
             showSidebar={showSidebar}
+            currentSort={sortOption}
+            isAscending={sortAscending}
+            onSortChange={handleSortChange}
+            onToggleSortDirection={handleToggleSortDirection}
+            onClearSort={handleClearSort}
           />
           <TaskInput onAddTodo={handleAddTodo} />
           <TaskList
-            tasks={tasks}
             // toggleTaskImportance={toggleTaskImportance}
             // toggleTaskCompletion={toggleTaskCompletion}
             onTaskSelect={handleTaskSelect}
             selectedTaskId={selectedTask?.id}
             viewMode={viewMode}
             // todos={todos}
-            todos={getFilteredTodos()}
+            todos={getFilteredAndSortedTodos()}
             filter={{
               searchTerm,
               showCompleted,

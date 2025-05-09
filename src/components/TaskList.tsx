@@ -111,7 +111,6 @@ const DraggableTodoItem: React.FC<DraggableTodoItemProps> = ({
 };
 
 interface TaskListProps {
-  tasks: Task[];
   // toggleTaskImportance: (taskId: number) => void;
   // toggleTaskCompletion: (taskId: number) => void;
   onTaskSelect: (todo: Todo) => void;
@@ -136,7 +135,6 @@ interface TaskListProps {
 }
 
 const TaskList: React.FC<TaskListProps> = ({
-  tasks,
   // toggleTaskImportance,
   // toggleTaskCompletion,
   onTaskSelect,

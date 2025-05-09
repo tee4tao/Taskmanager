@@ -860,3 +860,110 @@ body {
   flex: 1;
   overflow-y: auto;
 }
+
+/* Sort Options */
+.sort-options-container {
+  position: relative;
+}
+
+.sort-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  color: var(--text-color);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.sort-button:hover {
+  background-color: var(--secondary-color);
+}
+
+.active-sort {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--secondary-color);
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+}
+
+.sort-direction-btn,
+.clear-sort-btn {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.sort-direction-btn:hover,
+.clear-sort-btn:hover {
+  background-color: var(--border-color);
+}
+
+.sort-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 250px;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  z-index: 100;
+  margin-top: 0.25rem;
+  overflow: hidden;
+}
+
+.sort-dropdown-header {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sort-dropdown-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.sort-options-list {
+  list-style: none;
+}
+
+.sort-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.sort-option:hover {
+  background-color: var(--secondary-color);
+}
+
+.sort-option.selected {
+  background-color: rgba(0, 120, 212, 0.1);
+  color: var(--primary-color);
+}
+
+.sort-icon {
+  font-size: 1rem;
+  color: var(--text-light);
+}
+
+.sort-option.selected .sort-icon {
+  color: var(--primary-color);
+}

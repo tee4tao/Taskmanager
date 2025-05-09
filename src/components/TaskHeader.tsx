@@ -15,12 +15,18 @@ import {
   CalendarWeekStartRegular,
 } from "@fluentui/react-icons";
 import { TooltipIcon } from "./TooltipIcon";
+import SortOptions, { SortOption } from "./sortOptions";
 
 interface TaskHeaderProps {
   toggleSidebar: () => void;
   viewMode: "grid" | "list";
   toggleViewMode: (mode: "grid" | "list") => void;
   showSidebar: boolean;
+  onSortChange: (option: SortOption) => void;
+  currentSort: SortOption;
+  isAscending: boolean;
+  onToggleSortDirection: () => void;
+  onClearSort: () => void;
 }
 
 const TaskHeader: React.FC<TaskHeaderProps> = ({
@@ -28,6 +34,11 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
   viewMode,
   toggleViewMode,
   showSidebar,
+  onSortChange,
+  currentSort,
+  isAscending,
+  onToggleSortDirection,
+  onClearSort,
 }) => {
   return (
     <header className="py-4">
@@ -80,7 +91,14 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
           </div>
         </div>
         <div className="flex items-center gap-4 lg:gap-8">
-          <button className="text-blue-600">
+          <SortOptions
+            currentSort={currentSort}
+            isAscending={isAscending}
+            onSortChange={onSortChange}
+            onToggleSortDirection={onToggleSortDirection}
+            onClearSort={onClearSort}
+          />
+          {/* <button className="text-blue-600">
             <TooltipIcon
               icon={ArrowSortRegular}
               tooltipText="Sort"
@@ -88,7 +106,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
               tipClassName="left-1/2 -translate-x-1/2"
             />{" "}
             <span className="hidden lg:inline-block text-sm">Sort</span>
-          </button>
+          </button> */}
           <button className="text-blue-600">
             <TooltipIcon
               icon={CalendarWeekStartRegular}
