@@ -862,7 +862,7 @@ body {
 }
 
 /* Sort Options */
-.sort-options-container {
+/* .sort-options-container {
   position: relative;
 }
 
@@ -939,7 +939,7 @@ body {
 
 .sort-options-list {
   list-style: none;
-}
+} */
 
 .sort-option {
   display: flex;

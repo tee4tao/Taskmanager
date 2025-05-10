@@ -13,6 +13,8 @@ import {
   WeatherSunnyRegular,
   TextSortAscendingRegular,
   CalendarAddRegular,
+  ChevronDownRegular,
+  ChevronUpRegular,
 } from "@fluentui/react-icons";
 import { TooltipIcon } from "./TooltipIcon";
 
@@ -30,6 +32,7 @@ interface SortOptionsProps {
   isAscending: boolean;
   onToggleSortDirection: () => void;
   onClearSort: () => void;
+  activeNavFilter: string;
 }
 
 const SortOptions: React.FC<SortOptionsProps> = ({
@@ -38,6 +41,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({
   isAscending,
   onToggleSortDirection,
   onClearSort,
+  activeNavFilter,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -86,35 +90,52 @@ const SortOptions: React.FC<SortOptionsProps> = ({
   };
 
   return (
-    <div className="sort-options-container" ref={dropdownRef}>
+    <div className="relative" ref={dropdownRef}>
       {currentSort !== "none" ? (
-        <div className="active-sort">
+        <div className="flex items-center gap-2 py-2 px-3 text-sm ">
           <button
-            className="sort-direction-btn"
+            className="p-1 flex items-center justify-center text-[#323130]"
             onClick={onToggleSortDirection}
             aria-label="Toggle sort direction"
           >
-            {isAscending ? <ArrowSortUpRegular /> : <ArrowSortDownRegular />}
+            {isAscending ? (
+              <TooltipIcon
+                icon={ChevronUpRegular}
+                tooltipText="Reverse sort order"
+                tipClassName="left-1/2 -translate-x-1/2 bottom-full"
+              />
+            ) : (
+              <TooltipIcon
+                icon={ChevronDownRegular}
+                tooltipText="Reverse sort order"
+                tipClassName="left-1/2 -translate-x-1/2 bottom-full"
+              />
+            )}
           </button>
           <span>Sorted by {getSortLabel(currentSort)}</span>
           <button
-            className="clear-sort-btn"
+            className="p-1 flex items-center justify-center text-[#323130]"
             onClick={onClearSort}
             aria-label="Clear sort"
           >
-            <DismissRegular />
+            <TooltipIcon
+              icon={DismissRegular}
+              tooltipText="Remove sort order option"
+              className="text-base"
+              tipClassName="left-1/2 -translate-x-1/2 bottom-full"
+            />
           </button>
         </div>
       ) : (
         <button
-          className="text-blue-600 sort-button"
+          className="text-blue-600 flex items-center gap-2 py-2 px-3 text-sm "
           onClick={handleSortClick}
           aria-label="Sort tasks"
         >
           <TooltipIcon
             icon={ArrowSortRegular}
             tooltipText="Sort"
-            className="text-blue-600"
+            className=""
             tipClassName="left-1/2 -translate-x-1/2"
           />{" "}
           <span className="hidden lg:inline-block text-sm">Sort</span>
@@ -130,20 +151,22 @@ const SortOptions: React.FC<SortOptionsProps> = ({
       )}
 
       {isOpen && (
-        <div className="sort-dropdown">
-          <div className="sort-dropdown-header">
-            <h3>Sort by</h3>
+        <div className="absolute right-0 top-full mt-2 w-64 bg-white border border-[#edebe9] rounded-md shadow-lg z-10 overflow-hidden">
+          <div className="py-3 px-4 border-b border-[#edebe9">
+            <h3 className="font-semibold">Sort by</h3>
           </div>
-          <ul className="sort-options-list">
-            <li
-              className={`sort-option ${
-                currentSort === "importance" ? "selected" : ""
-              }`}
-              onClick={() => handleOptionSelect("importance")}
-            >
-              <StarRegular className="sort-icon" />
-              <span>Importance</span>
-            </li>
+          <ul className="list-none">
+            {activeNavFilter !== "important" && (
+              <li
+                className={`sort-option ${
+                  currentSort === "importance" ? "selected" : ""
+                }`}
+                onClick={() => handleOptionSelect("importance")}
+              >
+                <StarRegular className="sort-icon" />
+                <span>Importance</span>
+              </li>
+            )}
             <li
               className={`sort-option ${
                 currentSort === "dueDate" ? "selected" : ""

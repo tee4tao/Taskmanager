@@ -38,13 +38,29 @@ const TaskInput = ({ onAddTodo }: AddTodoProps) => {
       <form action="" className="w-full" onSubmit={handleQuickAdd}>
         <div className="flex items-center gap-2 bg-white p-4 py-2 shadow-sm">
           <div className="text-blue-600">
-            {inputClicked ? <RadioButtonRegular /> : <AddRegular />}
+            {inputClicked ? (
+              <RadioButtonRegular fontSize={20} />
+            ) : (
+              <AddRegular
+                fontSize={20}
+                onClick={() => {
+                  const inputElement = document.querySelector(
+                    "#quick-add-input[type='text']"
+                  ) as HTMLInputElement;
+                  inputElement?.focus();
+                  setInputClicked(true);
+                }}
+                className="cursor-pointer"
+                aria-label="Add task"
+              />
+            )}
           </div>
 
           <input
             type="text"
             value={quickAddText}
             onChange={(e) => setQuickAddText(e.target.value)}
+            id="quick-add-input"
             className={`w-full h-8 px-4 py-2 rounded-md outline-none transition text-sm ${
               isFocused
                 ? "placeholder:text-gray-400"

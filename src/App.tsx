@@ -91,6 +91,7 @@ const App: React.FC = () => {
 
   // State for sidebar navigation
   const [activeNavFilter, setActiveNavFilter] = useState("all");
+  console.log(activeNavFilter);
 
   // State for user
   const [user, setUser] = useState<User | null>(null);
@@ -330,7 +331,7 @@ const App: React.FC = () => {
         sorted.sort((a, b) => {
           // Sort by starred status first
           if (a.isStarred !== b.isStarred) {
-            return a.isStarred ? -1 : 1;
+            return a.isStarred ? 1 : -1;
           }
           // Then by priority
           const priorityOrder = {
@@ -469,6 +470,7 @@ const App: React.FC = () => {
             onSortChange={handleSortChange}
             onToggleSortDirection={handleToggleSortDirection}
             onClearSort={handleClearSort}
+            activeNavFilter={activeNavFilter}
           />
           <TaskInput onAddTodo={handleAddTodo} />
           <TaskList

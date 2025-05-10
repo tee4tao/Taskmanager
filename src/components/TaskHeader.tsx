@@ -27,6 +27,7 @@ interface TaskHeaderProps {
   isAscending: boolean;
   onToggleSortDirection: () => void;
   onClearSort: () => void;
+  activeNavFilter: string;
 }
 
 const TaskHeader: React.FC<TaskHeaderProps> = ({
@@ -39,6 +40,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
   isAscending,
   onToggleSortDirection,
   onClearSort,
+  activeNavFilter,
 }) => {
   return (
     <header className="py-4">
@@ -90,15 +92,17 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
             </button>
           </div>
         </div>
-        <div className="flex items-center gap-4 lg:gap-8">
-          <SortOptions
-            currentSort={currentSort}
-            isAscending={isAscending}
-            onSortChange={onSortChange}
-            onToggleSortDirection={onToggleSortDirection}
-            onClearSort={onClearSort}
-          />
-          {/* <button className="text-blue-600">
+        {activeNavFilter !== "myDay" && (
+          <div className="flex items-center gap-4 lg:gap-8">
+            <SortOptions
+              currentSort={currentSort}
+              isAscending={isAscending}
+              onSortChange={onSortChange}
+              onToggleSortDirection={onToggleSortDirection}
+              onClearSort={onClearSort}
+              activeNavFilter={activeNavFilter}
+            />
+            {/* <button className="text-blue-600">
             <TooltipIcon
               icon={ArrowSortRegular}
               tooltipText="Sort"
@@ -107,16 +111,17 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
             />{" "}
             <span className="hidden lg:inline-block text-sm">Sort</span>
           </button> */}
-          <button className="text-blue-600">
-            <TooltipIcon
-              icon={CalendarWeekStartRegular}
-              tooltipText="Group"
-              className="text-blue-600"
-              tipClassName="left-1/2 -translate-x-1/2 top-full"
-            />{" "}
-            <span className="hidden lg:inline-block text-sm">Group</span>
-          </button>
-        </div>
+            <button className="text-blue-600">
+              <TooltipIcon
+                icon={CalendarWeekStartRegular}
+                tooltipText="Group"
+                className="text-blue-600"
+                tipClassName="left-1/2 -translate-x-1/2 top-full"
+              />{" "}
+              <span className="hidden lg:inline-block text-sm">Group</span>
+            </button>
+          </div>
+        )}
       </div>
       {/* <div className="flex items-center px-4 py-2">
         <button
