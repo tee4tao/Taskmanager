@@ -91,7 +91,6 @@ const App: React.FC = () => {
 
   // State for sidebar navigation
   const [activeNavFilter, setActiveNavFilter] = useState("all");
-  console.log(activeNavFilter);
 
   // State for user
   const [user, setUser] = useState<User | null>(null);

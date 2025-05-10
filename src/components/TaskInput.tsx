@@ -8,6 +8,7 @@ import {
 import { useState } from "react";
 import { TooltipIcon } from "./TooltipIcon";
 import { Category, Priority } from "../types/todo";
+import DatePicker from "./DatePicker";
 
 interface AddTodoProps {
   onAddTodo: (
@@ -24,13 +25,16 @@ const TaskInput = ({ onAddTodo }: AddTodoProps) => {
   const [inputClicked, setInputClicked] = useState(false);
   const [quickAddText, setQuickAddText] = useState("");
 
+  const [selected, setSelected] = useState<Date | undefined>();
+
   const handleQuickAdd = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (quickAddText.trim()) {
-      onAddTodo(quickAddText.trim());
+      onAddTodo(quickAddText.trim(), undefined, selected);
       setQuickAddText("");
     }
+    setSelected(undefined);
   };
 
   return (
@@ -75,13 +79,23 @@ const TaskInput = ({ onAddTodo }: AddTodoProps) => {
         </div>
         {inputClicked && (
           <div className="flex items-center justify-between p-4 py-2">
-            <div className="space-x-4">
-              <TooltipIcon
+            <div className="flex items-center gap-2">
+              {/* <TooltipIcon
                 icon={CalendarLtrRegular}
                 tooltipText="Add due date"
+                tipClassName="bottom-full"
+              /> */}
+              <DatePicker selected={selected} setSelected={setSelected} />
+              <TooltipIcon
+                icon={AlertRegular}
+                tooltipText="Remind me"
+                tipClassName="bottom-full"
               />
-              <TooltipIcon icon={AlertRegular} tooltipText="Remind me" />
-              <TooltipIcon icon={ArrowRepeatAllRegular} tooltipText="Repeat" />
+              <TooltipIcon
+                icon={ArrowRepeatAllRegular}
+                tooltipText="Repeat"
+                tipClassName="bottom-full"
+              />
             </div>
             <button
               type="submit"

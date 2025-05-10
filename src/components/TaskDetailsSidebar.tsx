@@ -172,7 +172,7 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
               <input
                 id="dueDate"
                 type="date"
-                value={dueDate ? dueDate : "Add due date"}
+                value={dueDate ? dueDate : ""}
                 onChange={(e) => setDueDate(e.target.value)}
                 className="form-control"
               />
