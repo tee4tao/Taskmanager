@@ -128,7 +128,7 @@ const SortOptions: React.FC<SortOptionsProps> = ({
         </div>
       ) : (
         <button
-          className="text-blue-600 flex items-center gap-2 py-2 px-3 text-sm "
+          className="text-blue-600 flex items-center gap-2 text-sm "
           onClick={handleSortClick}
           aria-label="Sort tasks"
         >

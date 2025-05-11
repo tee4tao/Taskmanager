@@ -58,10 +58,45 @@ NavProps) => {
   return (
     <nav
       id="navbar"
-      className="w-full bg-blue-700 py-2 px-8 flex justify-between items-center text-white"
+      className="w-full flex flex-col items-center gap-2 bg-blue-700 py-2 px-8 "
     >
-      <h3 className="text-xl">Onlook</h3>
-      <div className="relative">
+      <div className="w-full flex justify-between items-center text-white">
+        <h3 className="text-xl">Onlook</h3>
+        <div className="relative hidden md:block">
+          <SearchRegular
+            fontSize={20}
+            className="absolute top-1/2 -translate-y-1/2 left-2 text-black"
+          />
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder="Search To Do"
+            className="w-72 py-1 px-8 border rounded-md text-sm text-black outline-none"
+          />
+          {searchTerm && (
+            <button
+              className="absolute top-1/2 -translate-y-1/2 right-2 text-black"
+              onClick={() => onSearchChange("")}
+              aria-label="Clear search"
+            >
+              <DismissRegular fontSize={18} />
+            </button>
+          )}
+        </div>
+        <div className="flex items-center gap-4">
+          {/* <AlertRegular fontSize={20} /> */}
+          <Notifications
+            notifications={notifications}
+            unreadCount={unreadCount}
+            onMarkAsRead={markAsRead}
+            onClearNotification={clearNotification}
+            onClearAll={clearAllNotifications}
+          />
+          <div className="border border-white rounded-full px-1">TA</div>
+        </div>
+      </div>
+      <div className="relative md:hidden">
         <SearchRegular
           fontSize={20}
           className="absolute top-1/2 -translate-y-1/2 left-2 text-black"
@@ -82,17 +117,6 @@ NavProps) => {
             <DismissRegular fontSize={18} />
           </button>
         )}
-      </div>
-      <div className="flex items-center gap-4">
-        {/* <AlertRegular fontSize={20} /> */}
-        <Notifications
-          notifications={notifications}
-          unreadCount={unreadCount}
-          onMarkAsRead={markAsRead}
-          onClearNotification={clearNotification}
-          onClearAll={clearAllNotifications}
-        />
-        <div className="border border-white rounded-full px-1">TA</div>
       </div>
     </nav>
   );

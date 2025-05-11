@@ -30,8 +30,9 @@ const DatePicker = ({ selected, setSelected }: DatePickerProps) => {
           )}
 
           {!selected && open && (
-            <Popover.Panel className="absolute z-10 mt-2 bg-white border rounded-lg shadow-lg p-4">
+            <Popover.Panel className="absolute z-10 mt-2 bg-white border rounded-lg shadow-lg p-4 ">
               <DayPicker
+                className=""
                 mode="single"
                 selected={tempSelected}
                 onSelect={setTempSelected}

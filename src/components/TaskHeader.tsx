@@ -57,7 +57,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 
             <h2 className="text-xl font-semibold text-blue-600">Tasks</h2>
           </div>
-          <div className="space-x-4">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => toggleViewMode("grid")}
               className={`p-1 ${
@@ -93,7 +93,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
           </div>
         </div>
         {activeNavFilter !== "myDay" && (
-          <div className="flex items-center gap-4 lg:gap-8">
+          <div className="flex items-center gap-2 lg:gap-8">
             <SortOptions
               currentSort={currentSort}
               isAscending={isAscending}
