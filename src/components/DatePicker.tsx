@@ -16,7 +16,7 @@ const DatePicker = ({ selected, setSelected }: DatePickerProps) => {
   const [tempSelected, setTempSelected] = useState<Date | undefined>(); // Temporary date inside popup
 
   return (
-    <Popover className="relative">
+    <Popover className="relative outline-none">
       {({ open, close }) => (
         <>
           {!selected && (

@@ -458,7 +458,7 @@ const App: React.FC = () => {
             onFilterChange={handleNavFilterChange}
           />
         )}
-        <div className="flex-1 flex flex-col overflow-hidden px-8">
+        <div className="flex-1 flex flex-col overflow-hidden px-8 min-h-[35rem]">
           <TaskHeader
             toggleSidebar={toggleSidebar}
             viewMode={viewMode}
