@@ -57,6 +57,11 @@ const Sidebar: React.FC<SidebarProps> = ({
   //     all: todos.length,
   //   };
   // }, [todos]);
+  const getLocalDateString = (date: Date): string => {
+    const offset = date.getTimezoneOffset();
+    const localDate = new Date(date.getTime() - offset * 60 * 1000);
+    return localDate.toISOString().split("T")[0];
+  };
 
   const sidebarItems: SidebarItem[] = [
     {
@@ -66,8 +71,8 @@ const Sidebar: React.FC<SidebarProps> = ({
       count: todos.filter(
         (todo) =>
           !todo.completed &&
-          todo.dueDate?.toISOString().split("T")[0] ===
-            new Date().toISOString().split("T")[0]
+          todo.dueDate &&
+          getLocalDateString(todo.dueDate) === getLocalDateString(new Date())
       ).length,
     },
     {
