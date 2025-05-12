@@ -71,6 +71,7 @@ const TodoItem: React.FC<TodoItemProps> = ({
       return dueDate.toLocaleDateString("en-GB").replace(/\//g, "/");
     } else {
       return dueDate.toLocaleDateString("en-US", {
+        weekday: "short",
         month: "short",
         day: "numeric",
         year:

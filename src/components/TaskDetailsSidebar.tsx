@@ -85,8 +85,35 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
     onSave(updatedTodo);
   };
 
+  // Format the due date
+  const formatcreatedAt = (date?: Date) => {
+    if (!date) return "";
+
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const createdAt = new Date(date);
+
+    if (createdAt.toDateString() === today.toDateString()) {
+      return "Today";
+    } else if (createdAt.toDateString() === yesterday.toDateString()) {
+      return "Yesterday";
+    } else {
+      return createdAt.toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        year:
+          createdAt.getFullYear() !== today.getFullYear()
+            ? "numeric"
+            : undefined,
+      });
+    }
+  };
+
   return (
-    <div className="w-80 border-l min-h-[calc(100dvh-var(--navbar-height))] flex flex-col justify-between bg-white z-20 fixed right-0 top-[var(--navbar-height)]">
+    <div className="w-80 border-l h-[calc(100dvh-var(--navbar-height))] flex flex-col justify-between bg-white z-20 fixed right-0 top-[var(--navbar-height)] overflow-y-auto">
       <form action="" onSubmit={handleSubmit}>
         {/* Header with task title */}
         <div className="flex items-center justify-between p-4 border-b">
@@ -286,7 +313,13 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
           tipClassName="left-1/2 -translate-x-1/2 bottom-full"
           onClick={onClose}
         />
-        <div>Created on Wed, April 23</div>
+        <div>
+          Created{" "}
+          {formatcreatedAt(todo.createdAt) !== "Yesterday" &&
+            formatcreatedAt(todo.createdAt) !== "Today" &&
+            "on"}{" "}
+          {formatcreatedAt(todo.createdAt)}
+        </div>
         <button
           className="text-gray-500 hover:text-red-600"
           onClick={() => setDeleteModal(true)}
