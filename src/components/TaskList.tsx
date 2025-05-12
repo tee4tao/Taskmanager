@@ -23,6 +23,31 @@ import TodoItem from "./TodoItem";
 import TaskDetailsSidebar from "./TaskDetailsSidebar";
 import { useTodoContext } from "../context/TodoContext";
 import DeletModal from "./DeletModal";
+// import { DndProvider } from "react-dnd";
+import { TouchBackend } from "react-dnd-touch-backend";
+// import { HTML5Backend } from "react-dnd-html5-backend";
+import { MultiBackend, TouchTransition } from "dnd-multi-backend";
+// import "react-dnd-multi-backend/dist/esm/styles.css";
+import { useLongPressDrag } from "../hooks/useLongPressDrag";
+
+const HTML5toTouch = {
+  backends: [
+    {
+      backend: HTML5Backend,
+      transition: undefined,
+    },
+    {
+      backend: TouchBackend,
+      options: {
+        enableTouchEvents: true,
+        enableMouseEvents: false,
+        delayTouchStart: 0,
+      },
+      preview: true,
+      transition: TouchTransition,
+    },
+  ],
+};
 
 interface TodoListProps {
   todos: Todo[];
@@ -67,9 +92,11 @@ const DraggableTodoItem: React.FC<DraggableTodoItemProps> = ({
   selectedTaskId,
   showCompleted,
 }) => {
+  const { canDrag, onTouchStart, onTouchEnd } = useLongPressDrag(300);
   const [{ isDragging }, drag] = useDrag({
     type: "TODO_ITEM",
     item: { index },
+    canDrag: canDrag,
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -91,8 +118,11 @@ const DraggableTodoItem: React.FC<DraggableTodoItemProps> = ({
           drag(drop(node));
         }
       }}
-      style={{ opacity: isDragging ? 0.5 : 1 }}
-      className={`${showCompleted && "hidden"} ${
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+      onTouchCancel={onTouchEnd}
+      style={{ opacity: isDragging ? 0.5 : 1, touchAction: "none" }}
+      className={`touch-none ${showCompleted && "hidden"} ${
         viewMode === "grid" && "border-b h-10"
       }`}
     >
@@ -235,7 +265,7 @@ const TaskList: React.FC<TaskListProps> = ({
   }
 
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DndProvider backend={MultiBackend} options={HTML5toTouch}>
       <section className="flex-1 overflow-auto">
         {viewMode === "grid" ? (
           <table className="min-w-full bg-white shadow-lg">
