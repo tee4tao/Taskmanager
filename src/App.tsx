@@ -17,6 +17,7 @@ import { authService } from "./services/authService";
 import { useTodoContext } from "./context/TodoContext";
 import Navbar from "./components/Navbar";
 import { SortOption } from "./components/sortOptions";
+import { playCompletionSound } from "./utils/sound";
 
 // Define action types for the reducer
 type TodoAction =
@@ -177,6 +178,10 @@ const App: React.FC = () => {
       try {
         await todoService.updateTodo(updatedTodo);
         dispatch({ type: "TOGGLE_COMPLETE", payload: id });
+        // Play appropriate sound based on the new completion state
+        if (updatedTodo.completed) {
+          playCompletionSound();
+        }
       } catch (error) {
         console.error("Error toggling todo completion:", error);
       }
