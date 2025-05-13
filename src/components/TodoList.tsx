@@ -15,19 +15,14 @@ import TaskCompleteCheckMark from "./TaskCompleteCheckMark";
 
 import { useState, useEffect } from "react";
 import type { Todo, Priority, Category } from "../types/todo";
-// import TodoItem from "./TodoItem";
-// import EditTodoModal from "./EditTodoModal";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import TodoItem from "./TodoItem";
 import TaskDetailsSidebar from "./TaskDetailsSidebar";
 import { useTodoContext } from "../context/TodoContext";
 import DeletModal from "./DeletModal";
-// import { DndProvider } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
-// import { HTML5Backend } from "react-dnd-html5-backend";
 import { MultiBackend, TouchTransition } from "dnd-multi-backend";
-// import "react-dnd-multi-backend/dist/esm/styles.css";
 import { useLongPressDrag } from "../hooks/useLongPressDrag";
 
 const HTML5toTouch = {
@@ -155,11 +150,11 @@ interface TaskListProps {
     onlyStarred: boolean;
     // onlyPlanned: boolean;
   };
-  onToggleComplete: (id: string) => void;
-  onToggleStar: (id: string) => void;
-  onUpdateTodo: (todo: Todo) => void;
-  onDeleteTodo: (id: string) => void;
-  onReorderTodos: (startIndex: number, endIndex: number) => void;
+  // onToggleComplete: (id: string) => void;
+  // onToggleStar: (id: string) => void;
+  // onUpdateTodo: (todo: Todo) => void;
+  // onDeleteTodo: (id: string) => void;
+  // onReorderTodos: (startIndex: number, endIndex: number) => void;
   // filteredTodos: Todo[];
   // setFilteredTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
 }
@@ -172,11 +167,11 @@ const TaskList: React.FC<TaskListProps> = ({
   viewMode,
   todos,
   filter,
-  onToggleComplete,
-  onToggleStar,
-  onUpdateTodo,
-  onDeleteTodo,
-  onReorderTodos,
+  // onToggleComplete,
+  // onToggleStar,
+  // onUpdateTodo,
+  // onDeleteTodo,
+  // onReorderTodos,
   // filteredTodos,
   // setFilteredTodos,
 }) => {
@@ -187,6 +182,11 @@ const TaskList: React.FC<TaskListProps> = ({
     deleteModal,
     setDeleteModal,
     handleCloseModal,
+    toggleComplete,
+    toggleStar,
+    deleteTodo,
+    reorderTodos,
+    updateTodo,
   } = useTodoContext();
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
@@ -209,25 +209,25 @@ const TaskList: React.FC<TaskListProps> = ({
       );
     }
 
-    // Filter by completion status
-    if (!filter.showCompleted) {
-      result = result.filter((todo) => !todo.completed);
-    }
+    // // Filter by completion status
+    // if (!filter.showCompleted) {
+    //   result = result.filter((todo) => !todo.completed);
+    // }
 
-    // Filter by priority
-    if (filter.priority !== "all") {
-      result = result.filter((todo) => todo.priority === filter.priority);
-    }
+    // // Filter by priority
+    // if (filter.priority !== "all") {
+    //   result = result.filter((todo) => todo.priority === filter.priority);
+    // }
 
-    // Filter by category
-    if (filter.category !== "all") {
-      result = result.filter((todo) => todo.category === filter.category);
-    }
+    // // Filter by category
+    // if (filter.category !== "all") {
+    //   result = result.filter((todo) => todo.category === filter.category);
+    // }
 
-    // Filter by starred status
-    if (filter.onlyStarred) {
-      result = result.filter((todo) => todo.isStarred);
-    }
+    // // Filter by starred status
+    // if (filter.onlyStarred) {
+    //   result = result.filter((todo) => todo.isStarred);
+    // }
 
     // Filter by planned
     // if (filter.onlyPlanned) {
@@ -252,7 +252,7 @@ const TaskList: React.FC<TaskListProps> = ({
   // };
 
   const handleSaveTodo = (updatedTodo: Todo) => {
-    onUpdateTodo(updatedTodo);
+    updateTodo(updatedTodo);
     setEditingTodo(null);
   };
 
@@ -291,11 +291,11 @@ const TaskList: React.FC<TaskListProps> = ({
                     key={todo.id}
                     index={index}
                     todo={todo}
-                    onToggleComplete={onToggleComplete}
-                    onToggleStar={onToggleStar}
+                    onToggleComplete={toggleComplete}
+                    onToggleStar={toggleStar}
                     onEdit={handleEditTodo}
                     // onDelete={onDeleteTodo}
-                    onReorderTodos={onReorderTodos}
+                    onReorderTodos={reorderTodos}
                     viewMode={viewMode}
                     selectedTaskId={selectedTaskId}
                     onTaskSelect={onTaskSelect}
@@ -330,11 +330,11 @@ const TaskList: React.FC<TaskListProps> = ({
                         key={todo.id}
                         index={index}
                         todo={todo}
-                        onToggleComplete={onToggleComplete}
-                        onToggleStar={onToggleStar}
+                        onToggleComplete={toggleComplete}
+                        onToggleStar={toggleStar}
                         onEdit={handleEditTodo}
                         // onDelete={onDeleteTodo}
-                        onReorderTodos={onReorderTodos}
+                        onReorderTodos={reorderTodos}
                         viewMode={viewMode}
                         selectedTaskId={selectedTaskId}
                         onTaskSelect={onTaskSelect}
@@ -370,11 +370,11 @@ const TaskList: React.FC<TaskListProps> = ({
                   key={todo.id}
                   index={index}
                   todo={todo}
-                  onToggleComplete={onToggleComplete}
-                  onToggleStar={onToggleStar}
+                  onToggleComplete={toggleComplete}
+                  onToggleStar={toggleStar}
                   onEdit={handleEditTodo}
                   // onDelete={onDeleteTodo}
-                  onReorderTodos={onReorderTodos}
+                  onReorderTodos={reorderTodos}
                   viewMode={viewMode}
                   selectedTaskId={selectedTaskId}
                   onTaskSelect={onTaskSelect}
@@ -422,11 +422,11 @@ const TaskList: React.FC<TaskListProps> = ({
                       key={todo.id}
                       index={index}
                       todo={todo}
-                      onToggleComplete={onToggleComplete}
-                      onToggleStar={onToggleStar}
+                      onToggleComplete={toggleComplete}
+                      onToggleStar={toggleStar}
                       onEdit={handleEditTodo}
                       // onDelete={onDeleteTodo}
-                      onReorderTodos={onReorderTodos}
+                      onReorderTodos={reorderTodos}
                       viewMode={viewMode}
                       selectedTaskId={selectedTaskId}
                       onTaskSelect={onTaskSelect}
@@ -469,7 +469,7 @@ const TaskList: React.FC<TaskListProps> = ({
             todo={editingTodo}
             onClose={handleCloseModal}
             setDeleteModal={setDeleteModal}
-            onDelete={onDeleteTodo}
+            onDelete={deleteTodo}
           />
         )}
       </section>
