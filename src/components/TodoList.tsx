@@ -455,14 +455,14 @@ const TaskList: React.FC<TaskListProps> = ({
           </div>
         )}
 
-        {editingTodo && (
+        {/* {editingTodo && (
           <TaskDetailsSidebar
             todo={editingTodo}
             onSave={handleSaveTodo}
             onClose={handleCloseModal}
             // onToggleComplete={onToggleComplete}
           />
-        )}
+        )} */}
         {/* delete modal */}
         {editingTodo && deleteModal && (
           <DeletModal

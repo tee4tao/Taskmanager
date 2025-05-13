@@ -112,7 +112,8 @@ const App: React.FC = () => {
     setViewMode(mode);
   };
 
-  const { editingTodo, todos } = useTodoContext();
+  const { editingTodo, setEditingTodo, updateTodo, todos, handleCloseModal } =
+    useTodoContext();
 
   const handleTaskSelect = (todo: Todo) => {
     setSelectedTask(todo);
@@ -200,6 +201,10 @@ const App: React.FC = () => {
 
     return getSortedTodos(getFilteredTodos());
   };
+  const handleSaveTodo = (updatedTodo: Todo) => {
+    updateTodo(updatedTodo);
+    setEditingTodo(null);
+  };
 
   return (
     <main className="flex flex-col min-h-screen bg-gray-50">
@@ -232,6 +237,16 @@ const App: React.FC = () => {
             todos={todos}
             activeFilter={activeNavFilter}
             onFilterChange={handleNavFilterChange}
+          />
+        )}
+
+        {/* TaskDetailsSidebar */}
+        {editingTodo && (
+          <TaskDetailsSidebar
+            todo={editingTodo}
+            onSave={handleSaveTodo}
+            onClose={handleCloseModal}
+            // onToggleComplete={onToggleComplete}
           />
         )}
         <div className="flex-1 flex flex-col overflow-hidden px-8 min-h-[35rem]">
