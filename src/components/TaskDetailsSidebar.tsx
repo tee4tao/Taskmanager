@@ -310,7 +310,7 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
         <TooltipIcon
           icon={PanelRightContractRegular}
           tooltipText="Hide detail view"
-          tipClassName="left-1/2 -translate-x-1/2 bottom-full"
+          tipClassName="-left-1/2 translate-x-0 bottom-full"
           onClick={onClose}
         />
         <div>

@@ -4,7 +4,7 @@ import type React from "react";
 import { useState, useEffect, useReducer } from "react";
 import Sidebar from "./components/Sidebar";
 import TaskHeader from "./components/TaskHeader";
-import TaskList from "./components/TaskList";
+import TaskList from "./components/TodoList";
 import TaskDetailsSidebar from "./components/TaskDetailsSidebar";
 import type { Task } from "./types";
 import TaskInput from "./components/TaskInput";
