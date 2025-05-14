@@ -6,20 +6,22 @@ import Sidebar from "./components/Sidebar";
 import TaskHeader from "./components/TaskHeader";
 import TaskList from "./components/TodoList";
 import TaskDetailsSidebar from "./components/TaskDetailsSidebar";
-import type { Task } from "./types";
 import TaskInput from "./components/TaskInput";
 import type { Todo, Category } from "./types/todo";
 import { Priority } from "./types/todo";
-import { useNotifications } from "./hooks/useNotifications";
 import { User } from "./types/user";
 import { todoService } from "./services/todoService";
 import { authService } from "./services/authService";
 import { useTodoContext } from "./context/TodoContext";
 import Navbar from "./components/Navbar";
 import { SortOption } from "./components/sortOptions";
-import { playCompletionSound } from "./utils/sound";
+import { useUser } from "./context/UserContext";
 
 const App: React.FC = () => {
+  const { editingTodo, setEditingTodo, updateTodo, todos, handleCloseModal } =
+    useTodoContext();
+  const { authModal } = useUser();
+
   const [showSidebar, setShowSidebar] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">(() =>
     localStorage.getItem("viewMode") === "list" ? "list" : "grid"
@@ -113,9 +115,6 @@ const App: React.FC = () => {
   const toggleViewMode = (mode: "grid" | "list") => {
     setViewMode(mode);
   };
-
-  const { editingTodo, setEditingTodo, updateTodo, todos, handleCloseModal } =
-    useTodoContext();
 
   const handleTaskSelect = (todo: Todo) => {
     setSelectedTask(todo);
@@ -221,6 +220,13 @@ const App: React.FC = () => {
         className={`${
           editingTodo
             ? "block lg:hidden opacity-100 fixed top-[var(--navbar-height)] w-full h-full bg-[#0000008e]  transition-all duration-300 z-10"
+            : "opacity-0 hidden"
+        }`}
+      />
+      <div
+        className={`${
+          authModal
+            ? "block opacity-100 fixed top-0 w-full h-full bg-[#0000008e]  transition-all duration-300 z-30"
             : "opacity-0 hidden"
         }`}
       />

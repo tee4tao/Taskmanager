@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-import type { SidebarItem } from "../types";
 import {
   NavigationRegular,
   WeatherSunnyRegular,
@@ -21,6 +20,14 @@ import {
 import { TooltipIcon } from "./TooltipIcon";
 import { Todo } from "../types/todo";
 import { useEffect, useMemo } from "react";
+
+interface SidebarItem {
+  id: string;
+  icon: React.ReactNode;
+  label: string;
+  count?: number;
+  isActive?: boolean;
+}
 
 interface SidebarProps {
   toggleSidebar: () => void;

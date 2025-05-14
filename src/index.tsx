@@ -4,15 +4,18 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { TodoProvider } from "./context/TodoContext";
+import { UserProvider } from "./context/UserContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <TodoProvider>
-      <App />
-    </TodoProvider>
+    <UserProvider>
+      <TodoProvider>
+        <App />
+      </TodoProvider>
+    </UserProvider>
   </React.StrictMode>
 );
 

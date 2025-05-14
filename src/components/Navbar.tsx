@@ -7,6 +7,7 @@ import {
 import Notifications from "./Notifications";
 import { useNotifications } from "../hooks/useNotifications";
 import { Todo } from "../types/todo";
+import UserAuth from "./userAuth";
 
 interface NavProps {
   searchTerm: string;
@@ -93,7 +94,8 @@ NavProps) => {
             onClearNotification={clearNotification}
             onClearAll={clearAllNotifications}
           />
-          <div className="border border-white rounded-full px-1">TA</div>
+          {/* <div className="border border-white rounded-full px-1">TA</div> */}
+          <UserAuth />
         </div>
       </div>
       <div className="relative md:hidden">
