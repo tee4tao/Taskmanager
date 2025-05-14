@@ -21,7 +21,9 @@ import { playCompletionSound } from "./utils/sound";
 
 const App: React.FC = () => {
   const [showSidebar, setShowSidebar] = useState(false);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list">(() =>
+    localStorage.getItem("viewMode") === "list" ? "list" : "grid"
+  );
   const [selectedTask, setSelectedTask] = useState<Todo | null>(null);
 
   // State for filters

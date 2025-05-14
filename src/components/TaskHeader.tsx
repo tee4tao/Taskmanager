@@ -16,6 +16,7 @@ import {
 } from "@fluentui/react-icons";
 import { TooltipIcon } from "./TooltipIcon";
 import SortOptions, { SortOption } from "./sortOptions";
+import { useEffect } from "react";
 
 interface TaskHeaderProps {
   toggleSidebar: () => void;
@@ -42,6 +43,9 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
   onClearSort,
   activeNavFilter,
 }) => {
+  useEffect(() => {
+    localStorage.setItem("viewMode", viewMode);
+  }, [viewMode]);
   return (
     <header className="py-4">
       <div className="w-full flex items-center justify-between">
