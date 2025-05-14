@@ -56,7 +56,7 @@ const Notifications: React.FC<NotificationsProps> = ({
         <TooltipIcon
           icon={AlertRegular}
           tooltipText="Notifications"
-          className=""
+          className="max-sm:text-base"
           tipClassName="left-0 -translate-x-full"
         />
         {/* <AlertRegular className="bell-icon" /> */}
@@ -68,7 +68,7 @@ const Notifications: React.FC<NotificationsProps> = ({
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full bg-white max-h-[400px] shadow-lg rounded-md w-[300px] mt-2 z-30 overflow-hidden">
+        <div className="absolute left-0 -translate-x-[60%] top-full bg-white max-h-[400px] shadow-lg rounded-md w-[300px] mt-2 z-30 overflow-hidden">
           <div className="flex justify-between items-center py-3 px-4 border-b border-[#edebe9]">
             <h3 className="font-semibold text-gray-600">Notifications</h3>
             {notifications.length > 0 && (
@@ -129,7 +129,7 @@ const Notifications: React.FC<NotificationsProps> = ({
                         icon={DismissRegular}
                         tooltipText="Dismiss"
                         className=""
-                        tipClassName="left-0 -translate-x-full"
+                        tipClassName="left-0 -translate-x-full bottom-full"
                       />
                       {/* <DismissRegular /> */}
                     </button>

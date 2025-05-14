@@ -62,7 +62,7 @@ NavProps) => {
       className="w-full flex flex-col items-center gap-2 bg-blue-700 py-2 px-8 "
     >
       <div className="w-full flex justify-between items-center text-white">
-        <h3 className="text-xl">Onlook</h3>
+        <h3 className="text-xl max-sm:text-base">Onlook</h3>
         <div className="relative hidden md:block">
           <SearchRegular
             fontSize={20}
@@ -85,7 +85,7 @@ NavProps) => {
             </button>
           )}
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 max-sm:gap-2">
           {/* <AlertRegular fontSize={20} /> */}
           <Notifications
             notifications={notifications}

@@ -50,13 +50,13 @@ const UserAuth = () => {
   return (
     <div className="relative w-full">
       {user ? (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 max-sm:gap-">
           <div className="flex items-center gap-1 text-white">
-            <PersonRegular fontSize={20} className="" />
-            <span className="text-sm">{user.username}</span>
+            <PersonRegular fontSize={20} className="max-sm:text-base" />
+            <span className="text-sm max-sm:text-xs">{user.username}</span>
           </div>
           <button
-            className="flex items-center gap-1 text-white text-xs py-1 px-2 rounded-md hover:text-[ffffff1a]"
+            className="flex items-center gap-1 text-red-600 font-medium text-xs py-1 px-2 rounded-md hover:text-[ffffff1a]"
             onClick={handleLogout}
             aria-label="Log out"
           >
@@ -70,8 +70,8 @@ const UserAuth = () => {
             className="flex items-center gap-1 text-white text-sm py-1 px-2 rounded-md hover:text-[ffffff1a]"
             onClick={toggleLoginForm}
           >
-            <PersonRegular fontSize={20} className="" />
-            <span>Log in</span>
+            <PersonRegular fontSize={20} className="max-sm:text-base" />
+            <span className=" max-sm:text-xs">Log in</span>
           </button>
 
           {isLoginFormOpen && (
