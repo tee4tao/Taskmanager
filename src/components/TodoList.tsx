@@ -23,6 +23,22 @@ import DeletModal from "./DeletModal";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { MultiBackend, TouchTransition } from "dnd-multi-backend";
 import { useLongPressDrag } from "../hooks/useLongPressDrag";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core"
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
 
 const HTML5toTouch = {
   backends: [
@@ -73,66 +89,105 @@ interface DraggableTodoItemProps {
   showCompleted?: boolean;
 }
 
-const DraggableTodoItem: React.FC<DraggableTodoItemProps> = ({
-  index,
-  todo,
-  onToggleComplete,
-  onToggleStar,
-  onEdit,
-  // onDelete,
-  onReorderTodos,
-  viewMode,
-  onTaskSelect,
-  selectedTaskId,
-  showCompleted,
-}) => {
-  const { canDrag, onTouchStart, onTouchEnd } = useLongPressDrag(300);
-  const [{ isDragging }, drag] = useDrag({
-    type: "TODO_ITEM",
-    item: { index },
-    canDrag: canDrag,
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
+// const DraggableTodoItem: React.FC<DraggableTodoItemProps> = ({
+//   index,
+//   todo,
+//   onToggleComplete,
+//   onToggleStar,
+//   onEdit,
+//   // onDelete,
+//   onReorderTodos,
+//   viewMode,
+//   onTaskSelect,
+//   selectedTaskId,
+//   showCompleted,
+// }) => {
+//   const { canDrag, onTouchStart, onTouchEnd } = useLongPressDrag(300);
+//   const [{ isDragging }, drag] = useDrag({
+//     type: "TODO_ITEM",
+//     item: { index },
+//     canDrag: canDrag,
+//     collect: (monitor) => ({
+//       isDragging: monitor.isDragging(),
+//     }),
+//   });
 
-  const [, drop] = useDrop({
-    accept: "TODO_ITEM",
-    hover(item: { index: number }) {
-      if (item.index !== index) {
-        onReorderTodos(item.index, index);
-        item.index = index;
-      }
-    },
-  });
+//   const [, drop] = useDrop({
+//     accept: "TODO_ITEM",
+//     hover(item: { index: number }) {
+//       if (item.index !== index) {
+//         onReorderTodos(item.index, index);
+//         item.index = index;
+//       }
+//     },
+//   });
+//   return (
+//     <tr
+//       ref={(node) => {
+//         if (node) {
+//           drag(drop(node));
+//         }
+//       }}
+//       onTouchStart={onTouchStart}
+//       onTouchEnd={onTouchEnd}
+//       onTouchCancel={onTouchEnd}
+//       style={{ opacity: isDragging ? 0.5 : 1, touchAction: "none" }}
+//       className={`touch-none ${showCompleted && "hidden"} ${
+//         viewMode === "grid" && "border-b h-10"
+//       }`}
+//     >
+//       <TodoItem
+//         todo={todo}
+//         onToggleComplete={onToggleComplete}
+//         onToggleStar={onToggleStar}
+//         onEdit={onEdit}
+//         // onDelete={onDelete}
+//         viewMode={viewMode}
+//         selectedTaskId={selectedTaskId}
+//         onTaskSelect={onTaskSelect}
+//       />
+//     </tr>
+//   );
+// };
+interface SortableTodoItemProps {
+  id: string
+  todo: Todo
+  onEdit: (todo: Todo) => void
+  onToggleComplete: (id: string) => void;
+  onToggleStar: (id: string) => void;
+  // onDelete: (id: string) => void;
+  onReorderTodos: (startIndex: number, endIndex: number) => void;
+  viewMode: "grid" | "list";
+  onTaskSelect: (todo: Todo) => void;
+  selectedTaskId?: string;
+  showCompleted?: boolean;
+}
+
+const SortableTodoItem: React.FC<SortableTodoItemProps> = ({ id, todo, onEdit,selectedTaskId,onTaskSelect, viewMode }) => {
+  const { toggleComplete, toggleStar, deleteTodo } = useTodoContext()
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  }
+
   return (
-    <tr
-      ref={(node) => {
-        if (node) {
-          drag(drop(node));
-        }
-      }}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
-      onTouchCancel={onTouchEnd}
-      style={{ opacity: isDragging ? 0.5 : 1, touchAction: "none" }}
-      className={`touch-none ${showCompleted && "hidden"} ${
-        viewMode === "grid" && "border-b h-10"
-      }`}
-    >
+    <tr ref={setNodeRef} style={style} {...attributes} {...listeners} className="sortable-todo-item">
       <TodoItem
         todo={todo}
-        onToggleComplete={onToggleComplete}
-        onToggleStar={onToggleStar}
+        onToggleComplete={() => toggleComplete(todo.id)}
+        onToggleStar={() => toggleStar(todo.id)}
         onEdit={onEdit}
-        // onDelete={onDelete}
+        // onDelete={() => deleteTodo(todo.id)}
         viewMode={viewMode}
-        selectedTaskId={selectedTaskId}
-        onTaskSelect={onTaskSelect}
+         selectedTaskId={selectedTaskId}
+         onTaskSelect={onTaskSelect}
       />
     </tr>
-  );
-};
+  )
+}
 
 interface TaskListProps {
   // toggleTaskImportance: (taskId: number) => void;
@@ -242,6 +297,18 @@ const TaskList: React.FC<TaskListProps> = ({
     // filter.onlyPlanned,
   ]);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      // Lower activationConstraint for better mobile experience
+      activationConstraint: {
+        distance: 5, // 5px movement before drag starts
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  )
+
   const handleEditTodo = (todo: Todo) => {
     setEditingTodo(todo);
   };
@@ -255,6 +322,19 @@ const TaskList: React.FC<TaskListProps> = ({
     setEditingTodo(null);
   };
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+
+    if (over && active.id !== over.id) {
+      const oldIndex = todos.findIndex((todo) => todo.id === active.id)
+      const newIndex = todos.findIndex((todo) => todo.id === over.id)
+
+      if (oldIndex !== -1 && newIndex !== -1) {
+        reorderTodos(oldIndex, newIndex)
+      }
+    }
+  }
+
   if (filteredTodos.length === 0) {
     return (
       <div className="empty-todo-list">
@@ -264,7 +344,8 @@ const TaskList: React.FC<TaskListProps> = ({
   }
 
   return (
-    <DndProvider backend={MultiBackend} options={HTML5toTouch}>
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <SortableContext items={todos.map((todo) => todo.id)} strategy={verticalListSortingStrategy}>
       <section className="flex-1 overflow-auto">
         {viewMode === "grid" ? (
           <table className="min-w-full bg-white shadow-lg">
@@ -286,9 +367,10 @@ const TaskList: React.FC<TaskListProps> = ({
               {filteredTodos
                 .filter((todo) => todo.completed === false)
                 .map((todo, index) => (
-                  <DraggableTodoItem
+                  <SortableTodoItem
                     key={todo.id}
-                    index={index}
+                    id={todo.id}
+                    // index={index}
                     todo={todo}
                     onToggleComplete={toggleComplete}
                     onToggleStar={toggleStar}
@@ -325,9 +407,10 @@ const TaskList: React.FC<TaskListProps> = ({
                   {filteredTodos
                     .filter((todo) => todo.completed === true)
                     .map((todo, index) => (
-                      <DraggableTodoItem
+                      <SortableTodoItem
                         key={todo.id}
-                        index={index}
+                        id={todo.id}
+                        // index={index}
                         todo={todo}
                         onToggleComplete={toggleComplete}
                         onToggleStar={toggleStar}
@@ -365,9 +448,10 @@ const TaskList: React.FC<TaskListProps> = ({
             {filteredTodos
               .filter((todo) => todo.completed === false)
               .map((todo, index) => (
-                <DraggableTodoItem
+                <SortableTodoItem
                   key={todo.id}
-                  index={index}
+                  id={todo.id}
+                  // index={index}
                   todo={todo}
                   onToggleComplete={toggleComplete}
                   onToggleStar={toggleStar}
@@ -417,9 +501,10 @@ const TaskList: React.FC<TaskListProps> = ({
                 {filteredTodos
                   .filter((todo) => todo.completed === true)
                   .map((todo, index) => (
-                    <DraggableTodoItem
+                    <SortableTodoItem
                       key={todo.id}
-                      index={index}
+                      id={todo.id}
+                      // index={index}
                       todo={todo}
                       onToggleComplete={toggleComplete}
                       onToggleStar={toggleStar}
@@ -472,7 +557,8 @@ const TaskList: React.FC<TaskListProps> = ({
           />
         )}
       </section>
-    </DndProvider>
+      </SortableContext>
+     </DndContext>
   );
 };
 
