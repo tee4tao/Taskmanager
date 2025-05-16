@@ -19,7 +19,8 @@ import {
 } from "@fluentui/react-icons";
 import { TooltipIcon } from "./TooltipIcon";
 import { Todo } from "../types/todo";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
+import { motion } from "framer-motion";
 
 interface SidebarItem {
   id: string;
@@ -37,6 +38,7 @@ interface SidebarProps {
   // setFilteredTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
   activeFilter: string;
   onFilterChange: (filter: string) => void;
+  showSidebar: boolean;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -46,6 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   // setFilteredTodos,
   activeFilter,
   onFilterChange,
+  showSidebar,
 }) => {
   // Calculate counts for each filter
   // const counts = useMemo(() => {
@@ -124,7 +127,12 @@ const Sidebar: React.FC<SidebarProps> = ({
   }, [editingTodo, toggleSidebar]);
 
   return (
-    <aside className="fixed lg:relative left-0 top-[var(--navbar-height)] lg:top-0 w-56 bg-white border-r flex flex-col h-screen z-20">
+    <motion.aside
+      initial={{ opacity: 0, x: showSidebar ? -50 : 0 }}
+      animate={{ opacity: 1, x: showSidebar ? 0 : -50 }}
+      transition={{ duration: 0.5 }}
+      className="fixed lg:relative left-0 top-[var(--navbar-height)] lg:top-0 w-56 bg-white border-r flex flex-col h-screen z-20"
+    >
       <div className="w-full p-4 flex items-center justify-between">
         <button className="" onClick={toggleSidebar}>
           <NavigationRegular fontSize={22} className="text-black" />
@@ -185,7 +193,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           tipClassName="left-1/2 -translate-x-1/2"
         />
       </div>
-    </aside>
+    </motion.aside>
   );
 };
 

@@ -4,6 +4,7 @@ import type React from "react";
 import { useState } from "react";
 import { useUser } from "../context/UserContext";
 import { PersonRegular, SignOutRegular } from "@fluentui/react-icons";
+import { motion } from "framer-motion";
 
 const UserAuth = () => {
   const [isLoginFormOpen, setIsLoginFormOpen] = useState(false);
@@ -75,7 +76,13 @@ const UserAuth = () => {
           </button>
 
           {isLoginFormOpen && (
-            <div className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-[300px] bg-white rounded-md shadow-lg z-30">
+            <motion.div
+              className="fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-[300px] bg-white rounded-md shadow-lg z-30"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
               <form onSubmit={handleLogin} className="p-4">
                 <h3 className="text-lg font-semibold mb-2 text-black">
                   Log in
@@ -130,7 +137,7 @@ const UserAuth = () => {
                   </button>
                 </div>
               </form>
-            </div>
+            </motion.div>
           )}
         </div>
       )}

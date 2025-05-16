@@ -16,6 +16,7 @@ import { useTodoContext } from "./context/TodoContext";
 import Navbar from "./components/Navbar";
 import { SortOption } from "./components/sortOptions";
 import { useUser } from "./context/UserContext";
+import { motion, AnimatePresence } from "framer-motion";
 
 const App: React.FC = () => {
   const { editingTodo, setEditingTodo, updateTodo, todos, handleCloseModal } =
@@ -223,13 +224,18 @@ const App: React.FC = () => {
             : "opacity-0 hidden"
         }`}
       />
-      <div
-        className={`${
-          authModal
-            ? "block opacity-100 fixed top-0 w-full h-full bg-[#0000008e]  transition-all duration-300 z-30"
-            : "opacity-0 hidden"
-        }`}
-      />
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className={`${
+            authModal
+              ? "block opacity-100 fixed top-0 w-full h-full bg-[#0000008e]  transition-all duration-300 z-30"
+              : "opacity-0 hidden"
+          }`}
+        />
+      </AnimatePresence>
 
       <Navbar
         searchTerm={searchTerm}
@@ -245,6 +251,7 @@ const App: React.FC = () => {
             todos={todos}
             activeFilter={activeNavFilter}
             onFilterChange={handleNavFilterChange}
+            showSidebar={showSidebar}
           />
         )}
 
