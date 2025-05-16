@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 import { useState, useEffect } from "react";
 import {
@@ -61,13 +59,13 @@ const SortableTodoItem: React.FC<SortableTodoItemProps> = ({
     transform,
     transition,
     isDragging,
-  } = useSortable({ 
+  } = useSortable({
     id,
     // Set default transition that will be used when not dragging
     transition: {
       duration: 250,
-      easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
-    }
+      easing: "cubic-bezier(0.25, 1, 0.5, 1)",
+    },
   });
 
   const style = {
@@ -76,17 +74,17 @@ const SortableTodoItem: React.FC<SortableTodoItemProps> = ({
     transition: isDragging ? undefined : transition,
     opacity: isDragging ? 0.5 : 1,
     // Important for mobile - prevents the browser from handling touch events
-    touchAction: "none", 
-    zIndex: isDragging ? 1000 : 'auto',
+    touchAction: "none",
+    zIndex: isDragging ? 1000 : "auto",
   };
 
   return (
     <div
       ref={setNodeRef}
       style={{
-    ...style,
-    display: viewMode === "grid" ? "table-row" : undefined,
-  }}
+        ...style,
+        display: viewMode === "grid" ? "table-row" : undefined,
+      }}
       {...attributes}
       {...listeners}
       className="sortable-todo-item"
@@ -163,7 +161,7 @@ const TaskList: React.FC<TaskListProps> = ({
     // PointerSensor works for both mouse and touch on modern browsers
     useSensor(PointerSensor, {
       // Don't start dragging on every tiny movement
-      activationConstraint: { 
+      activationConstraint: {
         distance: 8, // Minimum distance in pixels before drag starts
       },
     }),
@@ -265,7 +263,11 @@ const TaskList: React.FC<TaskListProps> = ({
                           <button
                             onClick={() => setShowCompleted(!showCompleted)}
                             className="mr-2 focus:outline-none"
-                            aria-label={showCompleted ? "Hide completed tasks" : "Show completed tasks"}
+                            aria-label={
+                              showCompleted
+                                ? "Hide completed tasks"
+                                : "Show completed tasks"
+                            }
                           >
                             {showCompleted ? (
                               <ChevronDownRegular fontSize={20} />
@@ -284,23 +286,24 @@ const TaskList: React.FC<TaskListProps> = ({
                         </div>
                       </td>
                     </tr>
-                    {showCompleted && filteredTodos
-                      .filter((todo) => todo.completed === true)
-                      .map((todo) => (
-                        <SortableTodoItem
-                          key={todo.id}
-                          id={todo.id}
-                          todo={todo}
-                          onToggleComplete={toggleComplete}
-                          onToggleStar={toggleStar}
-                          onEdit={handleEditTodo}
-                          onReorderTodos={reorderTodos}
-                          viewMode={viewMode}
-                          selectedTaskId={selectedTaskId}
-                          onTaskSelect={onTaskSelect}
-                          showCompleted={showCompleted}
-                        />
-                      ))}
+                    {showCompleted &&
+                      filteredTodos
+                        .filter((todo) => todo.completed === true)
+                        .map((todo) => (
+                          <SortableTodoItem
+                            key={todo.id}
+                            id={todo.id}
+                            todo={todo}
+                            onToggleComplete={toggleComplete}
+                            onToggleStar={toggleStar}
+                            onEdit={handleEditTodo}
+                            onReorderTodos={reorderTodos}
+                            viewMode={viewMode}
+                            selectedTaskId={selectedTaskId}
+                            onTaskSelect={onTaskSelect}
+                            showCompleted={showCompleted}
+                          />
+                        ))}
                   </>
                 )}
               </tbody>
@@ -333,7 +336,11 @@ const TaskList: React.FC<TaskListProps> = ({
                     <button
                       onClick={() => setShowCompleted(!showCompleted)}
                       className="mr-2 focus:outline-none"
-                      aria-label={showCompleted ? "Hide completed tasks" : "Show completed tasks"}
+                      aria-label={
+                        showCompleted
+                          ? "Hide completed tasks"
+                          : "Show completed tasks"
+                      }
                     >
                       {showCompleted ? (
                         <ChevronDownRegular fontSize={20} />
@@ -349,23 +356,24 @@ const TaskList: React.FC<TaskListProps> = ({
                       }
                     </span>
                   </div>
-                  {showCompleted && filteredTodos
-                    .filter((todo) => todo.completed === true)
-                    .map((todo) => (
-                      <SortableTodoItem
-                        key={todo.id}
-                        id={todo.id}
-                        todo={todo}
-                        onToggleComplete={toggleComplete}
-                        onToggleStar={toggleStar}
-                        onEdit={handleEditTodo}
-                        onReorderTodos={reorderTodos}
-                        viewMode={viewMode}
-                        selectedTaskId={selectedTaskId}
-                        onTaskSelect={onTaskSelect}
-                        showCompleted={showCompleted}
-                      />
-                    ))}
+                  {showCompleted &&
+                    filteredTodos
+                      .filter((todo) => todo.completed === true)
+                      .map((todo) => (
+                        <SortableTodoItem
+                          key={todo.id}
+                          id={todo.id}
+                          todo={todo}
+                          onToggleComplete={toggleComplete}
+                          onToggleStar={toggleStar}
+                          onEdit={handleEditTodo}
+                          onReorderTodos={reorderTodos}
+                          viewMode={viewMode}
+                          selectedTaskId={selectedTaskId}
+                          onTaskSelect={onTaskSelect}
+                          showCompleted={showCompleted}
+                        />
+                      ))}
                 </>
               )}
             </div>

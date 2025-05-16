@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 import { useState } from "react";
 import {
@@ -31,8 +29,6 @@ interface TaskDetailsSidebarProps {
   todo: Todo;
   onClose: () => void;
   onSave: (updatedTodo: Todo) => void;
-  // onToggleComplete: (id: string) => void;
-  // onUpdateTask: (taskId: number, updates: Partial<Task>) => void;
 }
 
 const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
@@ -117,13 +113,6 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
         {/* Header with task title */}
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center">
-            {/* <div className="" onClick={(e) => e.stopPropagation()}>
-              <TaskCompleteCheckMark
-                todo={todo}
-                onToggleComplete={onToggleComplete}
-                className=""
-              />
-            </div> */}
             <button
               type="button"
               onClick={toggleCompleted}
@@ -151,7 +140,6 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
               required
               className="text-lg font-medium"
             />
-            {/* <h2 className="text-lg font-medium">{task.title}</h2> */}
           </div>
           <button
             type="button"
@@ -215,14 +203,6 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
 
             {/* Category */}
             <div className="space-y-2">
-              {/* {task.category ? (
-              <div className="flex items-center bg-red-50 text-red-700 rounded px-2 py-1 text-sm w-fit">
-                <span>Red category</span>
-                <button className="ml-1 text-red-700 hover:text-red-800">
-                  <DismissRegular fontSize={14} />
-                </button>
-              </div>
-            ) : null} */}
               <div className="flex items-center text-gray-700 px-2 py-1.5 w-full">
                 <TagRegular fontSize={16} className="mr-3 text-gray-500" />
                 <span>Pick a category</span>
@@ -270,12 +250,6 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
 
             {/* Notes */}
             <div className="pt-2">
-              {/* <textarea
-              value={notes}
-              onChange={handleNotesChange}
-              placeholder="Add notes"
-              className="w-full min-h-[100px] p-2 border-0 focus:ring-0 resize-none text-sm"
-            /> */}
               <textarea
                 id="description"
                 value={description}
@@ -327,9 +301,7 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
             icon={DeleteRegular}
             tooltipText="Delete task"
             tipClassName="left-1/2 -translate-x-full bottom-full"
-            // onClick={onClose}
           />
-          {/* <DeleteRegular fontSize={20} /> */}
         </button>
       </div>
     </div>

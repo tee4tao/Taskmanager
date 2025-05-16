@@ -32,11 +32,6 @@ const TaskCompleteCheckMark = ({
       ) : (
         <CircleRegular fontSize={20} className="" />
       )}
-      {/* {task.isCompleted ? (
-                        <CheckmarkCircleRegular fontSize={20} className="" />
-                      ) : (
-                        <CircleRegular fontSize={20} className="" />
-                      )} */}
     </div>
   );
 };

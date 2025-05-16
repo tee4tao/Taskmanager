@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 import { useState } from "react";
 import {
@@ -59,7 +57,6 @@ const Notifications: React.FC<NotificationsProps> = ({
           className="max-sm:text-base"
           tipClassName="left-0 -translate-x-full"
         />
-        {/* <AlertRegular className="bell-icon" /> */}
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 bg-[#d13438] text-xs w-4 h-4 rounded-full flex justify-center items-center">
             {unreadCount}
@@ -117,7 +114,6 @@ const Notifications: React.FC<NotificationsProps> = ({
                           className=""
                           tipClassName="left-0 -translate-x-full"
                         />
-                        {/* <EyeRegular /> */}
                       </button>
                     )}
                     <button
@@ -131,7 +127,6 @@ const Notifications: React.FC<NotificationsProps> = ({
                         className=""
                         tipClassName="left-0 -translate-x-full bottom-full"
                       />
-                      {/* <DismissRegular /> */}
                     </button>
                   </div>
                 </div>

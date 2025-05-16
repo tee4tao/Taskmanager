@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 import {
   NavigationRegular,
@@ -20,7 +18,6 @@ import {
 import { TooltipIcon } from "./TooltipIcon";
 import { Todo } from "../types/todo";
 import { useEffect } from "react";
-import { motion } from "framer-motion";
 
 interface SidebarItem {
   id: string;
@@ -34,39 +31,17 @@ interface SidebarProps {
   toggleSidebar: () => void;
   editingTodo: Todo | null;
   todos: Todo[];
-  // filteredTodos: Todo[];
-  // setFilteredTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
   activeFilter: string;
   onFilterChange: (filter: string) => void;
-  showSidebar: boolean;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
   toggleSidebar,
   editingTodo,
   todos,
-  // setFilteredTodos,
   activeFilter,
   onFilterChange,
-  showSidebar,
 }) => {
-  // Calculate counts for each filter
-  // const counts = useMemo(() => {
-  //   const today = new Date();
-  //   today.setHours(0, 0, 0, 0);
-
-  //   return {
-  //     myDay: todos.filter((todo) => {
-  //       if (!todo.dueDate) return false;
-  //       const dueDate = new Date(todo.dueDate);
-  //       dueDate.setHours(0, 0, 0, 0);
-  //       return dueDate.getTime() === today.getTime();
-  //     }).length,
-  //     important: todos.filter((todo) => todo.isStarred).length,
-  //     planned: todos.filter((todo) => todo.dueDate).length,
-  //     all: todos.length,
-  //   };
-  // }, [todos]);
   const getLocalDateString = (date: Date): string => {
     const offset = date.getTimezoneOffset();
     const localDate = new Date(date.getTime() - offset * 60 * 1000);
@@ -127,12 +102,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   }, [editingTodo, toggleSidebar]);
 
   return (
-    <motion.aside
-      initial={{ opacity: 0, x: showSidebar ? -50 : 0 }}
-      animate={{ opacity: 1, x: showSidebar ? 0 : -50 }}
-      transition={{ duration: 0.5 }}
-      className="fixed lg:relative left-0 top-[var(--navbar-height)] lg:top-0 w-56 bg-white border-r flex flex-col h-screen z-20"
-    >
+    <aside className="fixed lg:relative left-0 top-[var(--navbar-height)] lg:top-0 w-56 bg-white border-r flex flex-col h-screen z-20">
       <div className="w-full p-4 flex items-center justify-between">
         <button className="" onClick={toggleSidebar}>
           <NavigationRegular fontSize={22} className="text-black" />
@@ -193,7 +163,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           tipClassName="left-1/2 -translate-x-1/2"
         />
       </div>
-    </motion.aside>
+    </aside>
   );
 };
 

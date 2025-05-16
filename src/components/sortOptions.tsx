@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 
 import { useState, useRef, useEffect } from "react";
@@ -140,14 +138,6 @@ const SortOptions: React.FC<SortOptionsProps> = ({
           />{" "}
           <span className="hidden lg:inline-block text-sm">Sort</span>
         </button>
-        // <button
-        //   className="sort-button"
-        //   onClick={handleSortClick}
-        //   aria-label="Sort tasks"
-        // >
-        //   <ArrowSortRegular />
-        //   <span>Sort</span>
-        // </button>
       )}
 
       {isOpen && (

@@ -88,11 +88,6 @@ const App: React.FC = () => {
   const handleNavFilterChange = (filter: string) => {
     setActiveNavFilter(filter);
 
-    // Reset other filters
-    // setSearchTerm("");
-    // setPriorityFilter("all");
-    // setCategoryFilter("all");
-
     // Set appropriate filters based on navigation selection
     if (filter === "myDay") {
       setShowCompleted(true);
@@ -153,7 +148,7 @@ const App: React.FC = () => {
         });
         break;
       case "addedToMyDay":
-        // This is a placeholder - in a real app, you'd have a "myDay" flag
+        // This is a placeholder - in a real app, there will be a "myDay" flag
         // For now, we'll use isStarred as a substitute
         sorted.sort((a, b) =>
           a.isStarred === b.isStarred ? 0 : a.isStarred ? -1 : 1
@@ -251,7 +246,6 @@ const App: React.FC = () => {
             todos={todos}
             activeFilter={activeNavFilter}
             onFilterChange={handleNavFilterChange}
-            showSidebar={showSidebar}
           />
         )}
 
@@ -261,7 +255,6 @@ const App: React.FC = () => {
             todo={editingTodo}
             onSave={handleSaveTodo}
             onClose={handleCloseModal}
-            // onToggleComplete={onToggleComplete}
           />
         )}
         <div className="flex-1 flex flex-col overflow-hidden px-8 min-h-[35rem]">
@@ -282,7 +275,6 @@ const App: React.FC = () => {
             onTaskSelect={handleTaskSelect}
             selectedTaskId={selectedTask?.id}
             viewMode={viewMode}
-            // todos={todos}
             todos={getFilteredAndSortedTodos()}
             filter={{
               searchTerm,
@@ -294,14 +286,6 @@ const App: React.FC = () => {
           />
         </div>
       </div>
-
-      {/* {selectedTask && (
-        <TaskDetailsSidebar
-          task={selectedTask}
-          onClose={() => setSelectedTask(null)}
-          onUpdateTask={handleTaskUpdate}
-        />
-      )} */}
     </main>
   );
 };

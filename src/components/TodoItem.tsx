@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 import { useState } from "react";
 import { type Todo, Priority, type Category } from "../types/todo";
@@ -122,7 +120,6 @@ const TodoItem: React.FC<TodoItemProps> = ({
                 ? " line-through text-[#605e5c]"
                 : ""
             }`}
-            // onClick={() => onTaskSelect(todo)}
             onClick={() => onEdit(todo)}
           >
             {todo.title}
@@ -170,7 +167,6 @@ const TodoItem: React.FC<TodoItemProps> = ({
           className={`flex justify-between px-4 items-center h-14 shadow-md bg-white hover:bg-gray-100 cursor-pointer ${
             selectedTaskId === todo.id ? "bg-blue-300 hover:bg-blue-300" : ""
           }`}
-          // onClick={() => onTaskSelect(task)}
           onClick={() => onEdit(todo)}
         >
           <div className="flex items-center gap-2">
@@ -216,7 +212,6 @@ const TodoItem: React.FC<TodoItemProps> = ({
                 )}
                 {getCategoryBadge(todo.category)}
               </div>
-              {/* <p className=" text-xs text-red-500">{todo.dueDate}</p> */}
             </div>
           </div>
           <div className="" onClick={(e) => e.stopPropagation()}>
@@ -244,86 +239,6 @@ const TodoItem: React.FC<TodoItemProps> = ({
         </article>
       )}
     </>
-    // <div
-    //   className={`task-item ${todo.completed ? "task-completed" : ""}`}
-    //   onMouseEnter={() => setIsHovered(true)}
-    //   onMouseLeave={() => setIsHovered(false)}
-    // >
-    //   <div className="task-checkbox" onClick={() => onToggleComplete(todo.id)}>
-    //     {todo.completed ? (
-    //       <CheckmarkCircleRegular className="checkbox-icon checkbox-checked" />
-    //     ) : (
-    //       <CircleRegular className="checkbox-icon" />
-    //     )}
-    //   </div>
-
-    //   <div className="task-content">
-    //     <div className="task-title-row">
-    //       <span
-    //         className={`task-title ${
-    //           todo.completed ? "task-title-completed" : ""
-    //         }`}
-    //       >
-    //         {todo.title}
-    //       </span>
-
-    //       <div className="task-actions">
-    //         {isHovered && (
-    //           <>
-    //             <button
-    //               className="task-action-btn"
-    //               onClick={() => onEdit(todo)}
-    //               aria-label="Edit task"
-    //             >
-    //               <EditRegular />
-    //             </button>
-    //             <button
-    //               className="task-action-btn"
-    // onClick={() => onDelete(todo.id)}
-    //               aria-label="Delete task"
-    //             >
-    //               <DeleteRegular />
-    //             </button>
-    //           </>
-    //         )}
-
-    //         <button
-    //           className="task-star-btn"
-    //           onClick={() => onToggleStar(todo.id)}
-    //           aria-label={todo.isStarred ? "Unstar task" : "Star task"}
-    //         >
-    //           {todo.isStarred ? (
-    //             <StarFilled className="star-filled" />
-    //           ) : (
-    //             <StarRegular className="star-outline" />
-    //           )}
-    //         </button>
-    //       </div>
-    //     </div>
-
-    //     {todo.description && (
-    //       <p className="task-description">{todo.description}</p>
-    //     )}
-
-    //     <div className="task-meta">
-    //       {todo.dueDate && (
-    //         <div
-    //           className={`task-due-date ${isDueSoon ? "task-due-soon" : ""}`}
-    //         >
-    //           <CalendarMonthRegular className="due-date-icon" />
-    //           <span>{formatDueDate(todo.dueDate)}</span>
-    //           {isDueSoon && <WarningRegular className="due-soon-icon" />}
-    //         </div>
-    //       )}
-
-    //       <div className={`task-priority ${getPriorityColor(todo.priority)}`}>
-    //         {todo.priority}
-    //       </div>
-
-    //       {getCategoryBadge(todo.category)}
-    //     </div>
-    //   </div>
-    // </div>
   );
 };
 

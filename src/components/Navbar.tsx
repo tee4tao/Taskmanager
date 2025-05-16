@@ -13,22 +13,13 @@ interface NavProps {
   searchTerm: string;
   onSearchChange: (term: string) => void;
   todos: Todo[];
-  // notifications: Notification[];
-  // unreadCount: number;
-  // onMarkAsRead: (id: string) => void;
-  // onClearNotification: (id: string) => void;
-  // onClearAll: () => void;
 }
 
 const Navbar = ({
   searchTerm,
   onSearchChange,
   todos,
-}: // notifications,
-// unreadCount,
-// onMarkAsRead,
-// onClearNotification,
-// onClearAll,
+}:
 NavProps) => {
   const {
     notifications,
@@ -86,7 +77,6 @@ NavProps) => {
           )}
         </div>
         <div className="flex items-center gap-4 max-sm:gap-2">
-          {/* <AlertRegular fontSize={20} /> */}
           <Notifications
             notifications={notifications}
             unreadCount={unreadCount}
@@ -94,7 +84,6 @@ NavProps) => {
             onClearNotification={clearNotification}
             onClearAll={clearAllNotifications}
           />
-          {/* <div className="border border-white rounded-full px-1">TA</div> */}
           <UserAuth />
         </div>
       </div>
