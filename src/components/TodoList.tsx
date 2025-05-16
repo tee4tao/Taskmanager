@@ -87,7 +87,7 @@ const SortableTodoItem: React.FC<SortableTodoItemProps> = ({
       }}
       {...attributes}
       {...listeners}
-      className="sortable-todo-item"
+      // className="sortable-todo-item"
     >
       <TodoItem
         todo={todo}
@@ -203,7 +203,7 @@ const TaskList: React.FC<TaskListProps> = ({
 
   if (filteredTodos.length === 0) {
     return (
-      <div className="empty-todo-list p-4 text-center text-gray-500">
+      <div className="flex items-center justify-center h-52 bg-white rounded-md text-[#605e5c]">
         <p>No tasks match your current filters</p>
       </div>
     );

@@ -203,7 +203,7 @@ const TodoItem: React.FC<TodoItemProps> = ({
                   <span className="mx-1">•</span>
                 )}
                 {todo.description && (
-                  <p className="task-description flex items-center gap-1 text-sm text-[#605e5c]">
+                  <p className=" flex items-center gap-1 text-sm text-[#605e5c]">
                     <NoteRegular /> <span>Note</span>
                   </p>
                 )}
