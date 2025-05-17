@@ -1,3 +1,5 @@
+"use client";
+
 import type React from "react";
 import { useState, useEffect } from "react";
 import {
@@ -5,6 +7,7 @@ import {
   StarFilled,
   IosChevronRightRegular,
   ChevronDownRegular,
+  DragRegular,
 } from "@fluentui/react-icons";
 import { TooltipIcon } from "./TooltipIcon";
 import type { Todo, Priority, Category } from "../types/todo";
@@ -19,8 +22,10 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  TouchSensor,
+  DragOverlay,
+  defaultDropAnimationSideEffects,
   type DragEndEvent,
+  type DragStartEvent,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -61,7 +66,6 @@ const SortableTodoItem: React.FC<SortableTodoItemProps> = ({
     isDragging,
   } = useSortable({
     id,
-    // Set default transition that will be used when not dragging
     transition: {
       duration: 250,
       easing: "cubic-bezier(0.25, 1, 0.5, 1)",
@@ -70,24 +74,32 @@ const SortableTodoItem: React.FC<SortableTodoItemProps> = ({
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    // Disable transition during drag for better performance
     transition: isDragging ? undefined : transition,
     opacity: isDragging ? 0.5 : 1,
-    // Important for mobile - prevents the browser from handling touch events
-    touchAction: "none",
-    zIndex: isDragging ? 1000 : "auto",
+    zIndex: isDragging ? 1000 : 1,
+    position: "relative" as const,
+    touchAction: "manipulation" as const, // Better for mobile scrolling
   };
+
+  // Create drag handle component
+  const DragHandle = () => (
+    <div
+      {...attributes}
+      {...listeners}
+      className="flex items-center justify-center w-8 h-8 cursor-grab active:cursor-grabbing touch-none"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <DragRegular className="text-gray-400" fontSize={16} />
+    </div>
+  );
 
   return (
     <div
       ref={setNodeRef}
-      style={{
-        ...style,
-        display: viewMode === "grid" ? "table-row" : undefined,
-      }}
-      {...attributes}
-      {...listeners}
-      // className="sortable-todo-item"
+      style={style}
+      className={`w-full ${
+        viewMode === "grid" ? "border-b last:border-b-0" : ""
+      }`}
     >
       <TodoItem
         todo={todo}
@@ -97,6 +109,7 @@ const SortableTodoItem: React.FC<SortableTodoItemProps> = ({
         viewMode={viewMode}
         selectedTaskId={selectedTaskId}
         onTaskSelect={onTaskSelect}
+        dragHandle={<DragHandle />}
       />
     </div>
   );
@@ -137,6 +150,8 @@ const TaskList: React.FC<TaskListProps> = ({
   } = useTodoContext();
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
   const [showCompleted, setShowCompleted] = useState<boolean>(false);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [activeTodo, setActiveTodo] = useState<Todo | null>(null);
 
   // Apply filters to todos
   useEffect(() => {
@@ -153,27 +168,36 @@ const TaskList: React.FC<TaskListProps> = ({
       );
     }
 
+    // Filter by priority if not "all"
+    if (filter.priority !== "all") {
+      result = result.filter((todo) => todo.priority === filter.priority);
+    }
+
+    // Filter by category if not "all"
+    if (filter.category !== "all") {
+      result = result.filter((todo) => todo.category === filter.category);
+    }
+
+    // Filter by starred status
+    if (filter.onlyStarred) {
+      result = result.filter((todo) => todo.isStarred);
+    }
+
     setFilteredTodos(result);
   }, [todos, filter]);
 
   // Configure sensors for DnD
   const sensors = useSensors(
-    // PointerSensor works for both mouse and touch on modern browsers
+    // For desktop and mobile, the PointerSensor is generally enough
     useSensor(PointerSensor, {
-      // Don't start dragging on every tiny movement
+      // Increase activation constraint for better mobile experience
       activationConstraint: {
-        distance: 8, // Minimum distance in pixels before drag starts
+        distance: 8, // Minimum distance before drag starts (px)
+        tolerance: 5, // Allow slight movement during the delay
+        delay: 250, // Add a small delay for mobile (ms)
       },
     }),
-    // TouchSensor as a fallback for older browsers
-    useSensor(TouchSensor, {
-      // Make touch dragging more intentional with a delay
-      activationConstraint: {
-        delay: 150, // ms before drag starts
-        tolerance: 8, // Allow slight movement during delay
-      },
-    }),
-    // Support keyboard accessibility
+    // Keyboard accessibility
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
@@ -188,8 +212,22 @@ const TaskList: React.FC<TaskListProps> = ({
     setEditingTodo(null);
   };
 
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    setActiveId(active.id as string);
+
+    // Find the active todo
+    const draggedTodo = todos.find((todo) => todo.id === active.id);
+    if (draggedTodo) {
+      setActiveTodo(draggedTodo);
+    }
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+
+    setActiveId(null);
+    setActiveTodo(null);
 
     if (over && active.id !== over.id) {
       const oldIndex = todos.findIndex((todo) => todo.id === active.id);
@@ -201,21 +239,43 @@ const TaskList: React.FC<TaskListProps> = ({
     }
   };
 
+  // Define custom drop animation
+  const dropAnimation = {
+    sideEffects: defaultDropAnimationSideEffects({
+      styles: {
+        active: {
+          opacity: "0.5",
+        },
+      },
+    }),
+  };
+
   if (filteredTodos.length === 0) {
     return (
-      <div className="flex items-center justify-center h-52 bg-white rounded-md text-[#605e5c]">
+      <div className="empty-todo-list p-4 text-center text-gray-500">
         <p>No tasks match your current filters</p>
       </div>
     );
   }
 
+  // Separate incomplete and completed todos
+  const incompleteTodos = filteredTodos.filter((todo) => !todo.completed);
+  const completedTodos = filteredTodos.filter((todo) => todo.completed);
+
   return (
     <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
-      // Improve performance by canceling drag when leaving window
-      autoScroll={true}
+      autoScroll={{
+        threshold: {
+          x: 0.2,
+          y: 0.2,
+        },
+        acceleration: 10,
+        interval: 5,
+      }}
     >
       <SortableContext
         items={todos.map((todo) => todo.id)}
@@ -223,96 +283,24 @@ const TaskList: React.FC<TaskListProps> = ({
       >
         <section className="flex-1 overflow-auto">
           {viewMode === "grid" ? (
-            <table className="min-w-full bg-white shadow-lg">
-              <thead className="border-b">
-                <tr>
-                  <th className="text-left py-3 px-4 font-normal text-sm text-gray-600 w-8"></th>
-                  <th className="text-left py-3 px-4 font-normal text-sm text-gray-600">
-                    Title
-                  </th>
-                  <th className="text-left py-3 px-4 font-normal text-sm text-gray-600">
-                    Due Date
-                  </th>
-                  <th className="text-left py-3 px-4 font-normal text-sm text-gray-600">
-                    Importance
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredTodos
-                  .filter((todo) => todo.completed === false)
-                  .map((todo) => (
-                    <SortableTodoItem
-                      key={todo.id}
-                      id={todo.id}
-                      todo={todo}
-                      onToggleComplete={toggleComplete}
-                      onToggleStar={toggleStar}
-                      onEdit={handleEditTodo}
-                      onReorderTodos={reorderTodos}
-                      viewMode={viewMode}
-                      selectedTaskId={selectedTaskId}
-                      onTaskSelect={onTaskSelect}
-                    />
-                  ))}
-                {filteredTodos.some((todo) => todo.completed === true) && (
-                  <>
-                    <tr>
-                      <td colSpan={4}>
-                        <div className="flex items-center gap-3 py-3 px-4">
-                          <button
-                            onClick={() => setShowCompleted(!showCompleted)}
-                            className="mr-2 focus:outline-none"
-                            aria-label={
-                              showCompleted
-                                ? "Hide completed tasks"
-                                : "Show completed tasks"
-                            }
-                          >
-                            {showCompleted ? (
-                              <ChevronDownRegular fontSize={20} />
-                            ) : (
-                              <IosChevronRightRegular fontSize={20} />
-                            )}
-                          </button>
-                          <p className="font-medium">Completed</p>
-                          <span>
-                            {
-                              filteredTodos.filter(
-                                (todo) => todo.completed === true
-                              ).length
-                            }
-                          </span>
-                        </div>
-                      </td>
-                    </tr>
-                    {showCompleted &&
-                      filteredTodos
-                        .filter((todo) => todo.completed === true)
-                        .map((todo) => (
-                          <SortableTodoItem
-                            key={todo.id}
-                            id={todo.id}
-                            todo={todo}
-                            onToggleComplete={toggleComplete}
-                            onToggleStar={toggleStar}
-                            onEdit={handleEditTodo}
-                            onReorderTodos={reorderTodos}
-                            viewMode={viewMode}
-                            selectedTaskId={selectedTaskId}
-                            onTaskSelect={onTaskSelect}
-                            showCompleted={showCompleted}
-                          />
-                        ))}
-                  </>
-                )}
-              </tbody>
-            </table>
-          ) : (
-            <div className="flex flex-col gap-2 mt-2">
-              {filteredTodos
-                .filter((todo) => todo.completed === false)
-                .map((todo) => (
+            <div className="min-w-full bg-white shadow-lg">
+              {/* Table header */}
+              <div className="grid grid-cols-[auto_auto_1fr_auto_auto] border-b">
+                <div className="py-3 px-2 font-normal text-sm text-gray-600 w-8"></div>
+                <div className="py-3 px-2 font-normal text-sm text-gray-600 w-8"></div>
+                <div className="py-3 px-4 font-normal text-sm text-gray-600">
+                  Title
+                </div>
+                <div className="py-3 px-4 font-normal text-sm text-gray-600">
+                  Due Date
+                </div>
+                <div className="py-3 px-4 font-normal text-sm text-gray-600">
+                  Importance
+                </div>
+              </div>
+              {/* Incomplete todos */}
+              <div>
+                {incompleteTodos.map((todo) => (
                   <SortableTodoItem
                     key={todo.id}
                     id={todo.id}
@@ -326,7 +314,67 @@ const TaskList: React.FC<TaskListProps> = ({
                     onTaskSelect={onTaskSelect}
                   />
                 ))}
-              {filteredTodos.some((todo) => todo.completed === true) && (
+              </div>
+              {/* Completed todos section */}
+              {completedTodos.length > 0 && (
+                <>
+                  <div className="border-t border-b">
+                    <div className="flex items-center gap-3 py-3 px-4">
+                      <button
+                        onClick={() => setShowCompleted(!showCompleted)}
+                        className="mr-2 focus:outline-none"
+                        aria-label={
+                          showCompleted
+                            ? "Hide completed tasks"
+                            : "Show completed tasks"
+                        }
+                      >
+                        {showCompleted ? (
+                          <ChevronDownRegular fontSize={20} />
+                        ) : (
+                          <IosChevronRightRegular fontSize={20} />
+                        )}
+                      </button>
+                      <p className="font-medium">Completed</p>
+                      <span>{completedTodos.length}</span>
+                    </div>
+                  </div>
+                  {showCompleted &&
+                    completedTodos.map((todo) => (
+                      <SortableTodoItem
+                        key={todo.id}
+                        id={todo.id}
+                        todo={todo}
+                        onToggleComplete={toggleComplete}
+                        onToggleStar={toggleStar}
+                        onEdit={handleEditTodo}
+                        onReorderTodos={reorderTodos}
+                        viewMode={viewMode}
+                        selectedTaskId={selectedTaskId}
+                        onTaskSelect={onTaskSelect}
+                        showCompleted={showCompleted}
+                      />
+                    ))}
+                </>
+              )}
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2 mt-2">
+              {incompleteTodos.map((todo) => (
+                <SortableTodoItem
+                  key={todo.id}
+                  id={todo.id}
+                  todo={todo}
+                  onToggleComplete={toggleComplete}
+                  onToggleStar={toggleStar}
+                  onEdit={handleEditTodo}
+                  onReorderTodos={reorderTodos}
+                  viewMode={viewMode}
+                  selectedTaskId={selectedTaskId}
+                  onTaskSelect={onTaskSelect}
+                />
+              ))}
+              {completedTodos.length > 0 && (
                 <>
                   <div
                     className={`flex items-center gap-3 py-3 ${
@@ -349,31 +397,24 @@ const TaskList: React.FC<TaskListProps> = ({
                       )}
                     </button>
                     <p className="font-medium">Completed</p>
-                    <span>
-                      {
-                        filteredTodos.filter((todo) => todo.completed === true)
-                          .length
-                      }
-                    </span>
+                    <span>{completedTodos.length}</span>
                   </div>
                   {showCompleted &&
-                    filteredTodos
-                      .filter((todo) => todo.completed === true)
-                      .map((todo) => (
-                        <SortableTodoItem
-                          key={todo.id}
-                          id={todo.id}
-                          todo={todo}
-                          onToggleComplete={toggleComplete}
-                          onToggleStar={toggleStar}
-                          onEdit={handleEditTodo}
-                          onReorderTodos={reorderTodos}
-                          viewMode={viewMode}
-                          selectedTaskId={selectedTaskId}
-                          onTaskSelect={onTaskSelect}
-                          showCompleted={showCompleted}
-                        />
-                      ))}
+                    completedTodos.map((todo) => (
+                      <SortableTodoItem
+                        key={todo.id}
+                        id={todo.id}
+                        todo={todo}
+                        onToggleComplete={toggleComplete}
+                        onToggleStar={toggleStar}
+                        onEdit={handleEditTodo}
+                        onReorderTodos={reorderTodos}
+                        viewMode={viewMode}
+                        selectedTaskId={selectedTaskId}
+                        onTaskSelect={onTaskSelect}
+                        showCompleted={showCompleted}
+                      />
+                    ))}
                 </>
               )}
             </div>
@@ -387,6 +428,23 @@ const TaskList: React.FC<TaskListProps> = ({
               onDelete={deleteTodo}
             />
           )}
+
+          {/* Drag overlay for better visual feedback during drag operations */}
+          <DragOverlay dropAnimation={dropAnimation}>
+            {activeId && activeTodo ? (
+              <div className="opacity-80 bg-white shadow-lg border border-blue-400 rounded-md p-2 w-[90%] max-w-sm">
+                <TodoItem
+                  todo={activeTodo}
+                  onToggleComplete={() => {}}
+                  onToggleStar={() => {}}
+                  onEdit={() => {}}
+                  viewMode="list"
+                  onTaskSelect={() => {}}
+                  isDragOverlay={true}
+                />
+              </div>
+            ) : null}
+          </DragOverlay>
         </section>
       </SortableContext>
     </DndContext>
