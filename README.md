@@ -54,7 +54,6 @@ A fully functional Todo application built with React and TypeScript, featuring a
 
 The project follows a modular structure:
 
-\`\`\`
 src/
 ├── components/ # UI components
 ├── contexts/ # Context providers for global state
@@ -62,7 +61,6 @@ src/
 ├── services/ # API integration services
 ├── styles/ # CSS styles
 └── types/ # TypeScript interfaces and types
-\`\`\`
 
 ### Context Architecture
 
