@@ -34,7 +34,7 @@ body {
 }
 
 .task-priority {
-  padding: 0.25rem 0.5rem;
+  /* padding: 0.25rem 0.5rem; */
   /* border-radius: var(--border-radius); */
   text-transform: capitalize;
   font-size: 14px;
@@ -58,7 +58,7 @@ body {
 /* USEFUL */
 
 .task-category {
-  padding: 0.25rem 0.5rem;
+  /* padding: 0.25rem 0.5rem; */
   /* background-color: var(--secondary-color); */
   /* border-radius: var(--border-radius); */
   text-transform: capitalize;

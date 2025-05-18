@@ -86,7 +86,9 @@ const TodoItem: React.FC<TodoItemProps> = ({
   // Get category badge
   const getCategoryBadge = (category: Category) => {
     return (
-      <span className={`task-category task-category-${category.toLowerCase()}`}>
+      <span
+        className={`task-category task-category-${category.toLowerCase()} max-sm:text-[0.5rem]`}
+      >
         {category}
       </span>
     );
@@ -176,37 +178,43 @@ const TodoItem: React.FC<TodoItemProps> = ({
               >
                 {todo.title}
               </div>
-              <div className="flex items-center gap-2 max-sm:gap-1">
+              <div className="flex items-center gap-2 max-sm:gap-[1px]">
                 {todo.dueDate && (
                   <p
-                    className={`text-xs flex items-center gap-2 max-sm:gap-1 font-semibold ${
+                    className={`text-xs max-sm:text-[0.5rem] flex items-center gap-2 max-sm:gap-[1px] font-semibold ${
                       isDueSoon ? "text-red-600" : ""
                     }`}
                   >
                     <div className="flex items-center">
-                      <CalendarMonthRegular className="text-sm" />
-                      <span>{formatDueDate(todo.dueDate)}</span>
+                      <CalendarMonthRegular className="text-sm max-sm:text-xs" />
+                      <span className="text-nowrap">
+                        {formatDueDate(todo.dueDate)}
+                      </span>
                     </div>
-                    {isDueSoon && <WarningRegular className="text-sm" />}
+                    {isDueSoon && (
+                      <WarningRegular className="text-sm max-sm:text-xs" />
+                    )}
                   </p>
                 )}
                 {todo.dueDate && todo.description && (
-                  <span className="mx-1">•</span>
+                  <span className="mx-1 max-sm:mx-[0.1rem]">•</span>
                 )}
                 {todo.description && (
-                  <p className=" flex items-center gap-1 text-sm text-[#605e5c]">
+                  <p className=" flex items-center gap-1 max-sm:gap-[1px] text-sm max-sm:text-[0.5rem] text-[#605e5c]">
                     <NoteRegular /> <span>Note</span>
                   </p>
                 )}
                 {(todo.dueDate || todo.description) && (
-                  <span className="mx-1">•</span>
+                  <span className="mx-1 max-sm:mx-[0.1rem]">•</span>
                 )}
                 {getCategoryBadge(todo.category)}
                 {(todo.dueDate || todo.description || todo.category) && (
-                  <span className="mx-1">•</span>
+                  <span className="mx-1 max-sm:mx-[0.1rem]">•</span>
                 )}
                 <div
-                  className={`task-priority ${getPriorityColor(todo.priority)}`}
+                  className={`task-priority ${getPriorityColor(
+                    todo.priority
+                  )} max-sm:text-[0.5rem]`}
                 >
                   {todo.priority}
                 </div>
