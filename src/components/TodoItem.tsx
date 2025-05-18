@@ -176,10 +176,10 @@ const TodoItem: React.FC<TodoItemProps> = ({
               >
                 {todo.title}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 max-sm:gap-1">
                 {todo.dueDate && (
                   <p
-                    className={`text-xs flex items-center gap-2 font-semibold ${
+                    className={`text-xs flex items-center gap-2 max-sm:gap-1 font-semibold ${
                       isDueSoon ? "text-red-600" : ""
                     }`}
                   >
