@@ -106,14 +106,14 @@ The application uses React's Context API for global state management:
 
 ### Adding Tasks
 
-- Use the quick add form to add simple tasks
-- Click "Add detailed task" to add tasks with descriptions, due dates, priorities, and categories
+- Click on "Add a task" input field to add a task
+- You can click on the calendar icon below the input to add a due date(optional)
 
 ### Managing Tasks
 
 - Click the checkbox to mark tasks as completed
 - Click the star icon to mark tasks as important
-- Click on a task to see edit and delete options
+- In list view, click on a task to see edit(where you cann add a description, duedate, mark as complete or star) and delete options and in grid view, click on the task title to do the same.
 - Drag and drop tasks to reorder them
 
 ### Filtering and Sorting Tasks
