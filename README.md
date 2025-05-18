@@ -35,7 +35,7 @@ A fully functional Todo application built with React and TypeScript, featuring a
 
 - **Core**
 
-  - React 19
+  - React 18
   - TypeScript
   - Context API for global state management
 
@@ -69,9 +69,7 @@ src/
 The application uses React's Context API for global state management:
 
 - **TodoContext**: Manages todo items and related operations
-- **FilterContext**: Handles filtering and sorting options
 - **UserContext**: Manages user authentication
-- **NotificationContext**: Handles notifications
 
 ## Getting Started
 
@@ -115,25 +113,15 @@ The application uses React's Context API for global state management:
 
 - Click the checkbox to mark tasks as completed
 - Click the star icon to mark tasks as important
-- Hover over a task to see edit and delete options
-- On mobile, use the drag handle (vertical dots) to reorder tasks
-- On desktop, drag and drop tasks to reorder them
+- Click on a task to see edit and delete options
+- Drag and drop tasks to reorder them
 
 ### Filtering and Sorting Tasks
 
 - Use the search box to find specific tasks
 - Toggle "Show completed" to show/hide completed tasks
-- Filter by priority, category, or starred status
+- Open the sidebar to see options to filter by planned, important or my day
 - Sort tasks by importance, due date, alphabetically, or creation date
-
-## Mobile Features
-
-The application includes several mobile-optimized features:
-
-- **Touch-friendly Drag and Drop**: Custom implementation for smooth reordering on mobile
-- **Visible Controls**: Action buttons are always visible on mobile (no hover required)
-- **Responsive Layout**: Adapts to different screen sizes
-- **Touch Targets**: Larger touch areas for better mobile interaction
 
 ## Authentication
 
@@ -150,7 +138,3 @@ This demo includes a simple authentication system:
 - Keyboard shortcuts
 - Task sharing and collaboration
 - Recurring tasks
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
