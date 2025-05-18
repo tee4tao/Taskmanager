@@ -5,15 +5,10 @@ import {
   StarRegular,
   CalendarRegular,
   PersonRegular,
-  CheckboxCheckedRegular,
   AddRegular,
   SettingsRegular,
   HomeRegular,
-  DualScreenGroupRegular,
   CalendarWeekStartRegular,
-  CheckmarkRegular,
-  CalendarMonthRegular,
-  StarFilled,
 } from "@fluentui/react-icons";
 import { TooltipIcon } from "./TooltipIcon";
 import { Todo } from "../types/todo";

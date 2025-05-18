@@ -1,9 +1,5 @@
 import { useEffect } from "react";
-import {
-  AlertRegular,
-  DismissRegular,
-  SearchRegular,
-} from "@fluentui/react-icons";
+import { DismissRegular, SearchRegular } from "@fluentui/react-icons";
 import Notifications from "./Notifications";
 import { useNotifications } from "../hooks/useNotifications";
 import { Todo } from "../types/todo";
@@ -15,12 +11,7 @@ interface NavProps {
   todos: Todo[];
 }
 
-const Navbar = ({
-  searchTerm,
-  onSearchChange,
-  todos,
-}:
-NavProps) => {
+const Navbar = ({ searchTerm, onSearchChange, todos }: NavProps) => {
   const {
     notifications,
     markAsRead,

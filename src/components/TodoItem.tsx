@@ -1,15 +1,8 @@
-"use client";
-
 import type React from "react";
-import { useState } from "react";
 import { type Todo, Priority, type Category } from "../types/todo";
 import {
-  CheckmarkCircleRegular,
-  CircleRegular,
   StarRegular,
   StarFilled,
-  EditRegular,
-  DeleteRegular,
   CalendarMonthRegular,
   WarningRegular,
   NoteRegular,
@@ -25,8 +18,6 @@ interface TodoItemProps {
   viewMode?: "grid" | "list";
   onTaskSelect: (todo: Todo) => void;
   selectedTaskId?: string;
-  dragHandle?: React.ReactNode;
-  isDragOverlay?: boolean;
 }
 
 const TodoItem: React.FC<TodoItemProps> = ({
@@ -37,11 +28,7 @@ const TodoItem: React.FC<TodoItemProps> = ({
   viewMode,
   onTaskSelect,
   selectedTaskId,
-  dragHandle,
-  isDragOverlay = false,
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
   // Determine if the task is due soon (within 24 hours)
   const isDueSoon =
     todo.dueDate &&
@@ -105,66 +92,45 @@ const TodoItem: React.FC<TodoItemProps> = ({
     );
   };
 
-  // Handle click events
-  const handleItemClick = (e: React.MouseEvent) => {
-    if (!isDragOverlay) {
-      onEdit(todo);
-    }
-  };
-
   return (
     <>
       {viewMode === "grid" ? (
-        <div
-          className={`grid grid-cols-[auto_auto_1fr_auto_auto] items-center w-full ${
-            selectedTaskId === todo.id
-              ? "bg-blue-50 border-l-4 border-blue-500"
-              : todo.completed
-              ? "text-gray-500"
-              : ""
-          }`}
-          onClick={handleItemClick}
-        >
-          {/* Drag handle column */}
-          <div className="py-2 px-1">{dragHandle}</div>
-
-          {/* Checkbox column */}
-          <div className="py-2 px-1" onClick={(e) => e.stopPropagation()}>
+        <>
+          <td className="py-1 px-4" onClick={(e) => e.stopPropagation()}>
             <TaskCompleteCheckMark
               todo={todo}
               onToggleComplete={onToggleComplete}
-              className="hover:border border-gray-400 p-1"
+              className="hover:border border-gray-400 p-1 w-8}"
             />
-          </div>
-
-          {/* Title column */}
-          <div
-            className={`py-2 px-4 text-sm ${
-              todo.completed ? "line-through text-[#605e5c]" : ""
+          </td>
+          <td
+            className={`py-1 px-4 text-sm hover:border-2 hover:border-gray-400 ${
+              selectedTaskId === todo.id
+                ? "border-2 border-blue-600 hover:border-blue-600"
+                : todo.completed
+                ? " line-through text-[#605e5c]"
+                : ""
             }`}
+            onClick={() => onEdit(todo)}
           >
             {todo.title}
-          </div>
-
-          {/* Due date column */}
-          <div className="py-2 px-4 text-sm whitespace-nowrap">
+          </td>
+          <td className="py-1 px-4 text-sm ">
             {todo.dueDate && (
               <div
                 className={`flex items-center gap-2 font-semibold ${
                   isDueSoon ? "text-red-600" : ""
                 }`}
               >
-                <div className="flex items-center gap-1">
+                <div className="flex items-center">
                   <CalendarMonthRegular className="text-sm" />
                   <span>{formatDueDate(todo.dueDate)}</span>
                 </div>
                 {isDueSoon && <WarningRegular className="text-sm" />}
               </div>
             )}
-          </div>
-
-          {/* Star column */}
-          <div className="py-2 px-4" onClick={(e) => e.stopPropagation()}>
+          </td>
+          <td className="py-1 px-4" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => onToggleStar(todo.id)}
               className="text-gray-400 hover:text-blue-600 hover:border border-gray-400 px-2"
@@ -185,23 +151,16 @@ const TodoItem: React.FC<TodoItemProps> = ({
                 />
               )}
             </button>
-          </div>
-        </div>
+          </td>
+        </>
       ) : (
-        <div
-          className={`flex justify-between px-2 items-center h-14 shadow-md bg-white hover:bg-gray-100 ${
-            isDragOverlay ? "" : "cursor-pointer"
-          } ${
-            selectedTaskId === todo.id
-              ? "bg-blue-100 border-l-4 border-blue-500"
-              : ""
+        <article
+          className={`flex justify-between px-4 items-center h-14 shadow-md bg-white hover:bg-gray-100 cursor-pointer ${
+            selectedTaskId === todo.id ? "bg-blue-300 hover:bg-blue-300" : ""
           }`}
-          onClick={handleItemClick}
+          onClick={() => onEdit(todo)}
         >
           <div className="flex items-center gap-2">
-            {/* Drag handle for list view */}
-            {dragHandle}
-
             <div className="" onClick={(e) => e.stopPropagation()}>
               <TaskCompleteCheckMark
                 todo={todo}
@@ -235,7 +194,7 @@ const TodoItem: React.FC<TodoItemProps> = ({
                   <span className="mx-1">•</span>
                 )}
                 {todo.description && (
-                  <p className="task-description flex items-center gap-1 text-sm text-[#605e5c]">
+                  <p className=" flex items-center gap-1 text-sm text-[#605e5c]">
                     <NoteRegular /> <span>Note</span>
                   </p>
                 )}
@@ -243,13 +202,21 @@ const TodoItem: React.FC<TodoItemProps> = ({
                   <span className="mx-1">•</span>
                 )}
                 {getCategoryBadge(todo.category)}
+                {(todo.dueDate || todo.description || todo.category) && (
+                  <span className="mx-1">•</span>
+                )}
+                <div
+                  className={`task-priority ${getPriorityColor(todo.priority)}`}
+                >
+                  {todo.priority}
+                </div>
               </div>
             </div>
           </div>
           <div className="" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => onToggleStar(todo.id)}
-              className="text-gray-400 hover:text-blue-600"
+              className="text-gray-400 hover:text-blue-600 "
             >
               {todo.isStarred ? (
                 <TooltipIcon
@@ -268,7 +235,7 @@ const TodoItem: React.FC<TodoItemProps> = ({
               )}
             </button>
           </div>
-        </div>
+        </article>
       )}
     </>
   );

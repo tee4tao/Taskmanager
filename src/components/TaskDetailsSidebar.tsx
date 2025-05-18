@@ -1,19 +1,13 @@
 import type React from "react";
 import { useState } from "react";
 import {
-  AddRegular,
-  WeatherSunnyRegular,
   AlertRegular,
   CalendarRegular,
   ArrowRepeatAllRegular,
   TagRegular,
-  AttachRegular,
-  DismissRegular,
   DeleteRegular,
   StarRegular,
   StarFilled,
-  CheckboxUncheckedRegular,
-  CheckboxCheckedRegular,
   PanelRightContractRegular,
   CheckmarkCircleRegular,
   CircleRegular,
@@ -22,7 +16,6 @@ import {
 } from "@fluentui/react-icons";
 import { TooltipIcon } from "./TooltipIcon";
 import { Category, Priority, Todo } from "../types/todo";
-import TaskCompleteCheckMark from "./TaskCompleteCheckMark";
 import { useTodoContext } from "../context/TodoContext";
 
 interface TaskDetailsSidebarProps {
@@ -48,6 +41,9 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
   const [isStarred, setIsStarred] = useState<boolean>(todo.isStarred);
   const [animateComplete, setAnimateComplete] = useState<boolean>(false);
   const { setDeleteModal } = useTodoContext();
+
+  const [remindActive, setRemindActive] = useState<boolean>(false);
+  const [repeatActive, setRepeatActive] = useState<boolean>(false);
 
   if (!todo) return null;
 
@@ -158,25 +154,21 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
         {/* Task options */}
         <div className="flex-1 overflow-y-auto">
           <div className="p-4 space-y-4">
-            {/* Add step */}
-            <button className="flex items-center text-blue-600 hover:bg-blue-50 rounded px-2 py-1.5 w-full">
-              <AddRegular fontSize={16} className="mr-3" />
-              <span>Add step</span>
-            </button>
-
-            {/* Add to My Day */}
-            <button className="flex items-center text-gray-700 hover:bg-gray-100 rounded px-2 py-1.5 w-full">
-              <WeatherSunnyRegular
-                fontSize={16}
-                className="mr-3 text-gray-500"
-              />
-              <span>Add to My Day</span>
-            </button>
-
             {/* Remind me */}
-            <button className="flex items-center text-gray-700 hover:bg-gray-100 rounded px-2 py-1.5 w-full">
-              <AlertRegular fontSize={16} className="mr-3 text-gray-500" />
-              <span>Remind me</span>
+            <button
+              type="button"
+              className={`flex items-center text-gray-700 hover:bg-gray-100 rounded px-2 py-1.5 w-full focus:outline-none`}
+              onClick={() => setRemindActive((prev) => !prev)}
+            >
+              <AlertRegular
+                fontSize={16}
+                className={`mr-3 ${
+                  remindActive ? "text-blue-600" : "text-gray-500"
+                }`}
+              />
+              <span className={remindActive ? "text-blue-600" : ""}>
+                Remind me
+              </span>
             </button>
 
             {/* Add due date */}
@@ -193,12 +185,20 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
             </div>
 
             {/* Repeat */}
-            <button className="flex items-center text-gray-700 hover:bg-gray-100 rounded px-2 py-1.5 w-full">
+            <button
+              type="button"
+              className="flex items-center text-gray-700 hover:bg-gray-100 rounded px-2 py-1.5 w-full focus:outline-none"
+              onClick={() => setRepeatActive((prev) => !prev)}
+            >
               <ArrowRepeatAllRegular
                 fontSize={16}
-                className="mr-3 text-gray-500"
+                className={`mr-3  ${
+                  repeatActive ? "text-blue-600" : "text-gray-500"
+                }`}
               />
-              <span>Repeat</span>
+              <span className={repeatActive ? "text-blue-600" : ""}>
+                Repeat
+              </span>
             </button>
 
             {/* Category */}
@@ -241,12 +241,6 @@ const TaskDetailsSidebar: React.FC<TaskDetailsSidebarProps> = ({
                 <option value={Priority.High}>High</option>
               </select>
             </div>
-
-            {/* Add file */}
-            <button className="flex items-center text-gray-700 hover:bg-gray-100 rounded px-2 py-1.5 w-full">
-              <AttachRegular fontSize={16} className="mr-3 text-gray-500" />
-              <span>Add file</span>
-            </button>
 
             {/* Notes */}
             <div className="pt-2">

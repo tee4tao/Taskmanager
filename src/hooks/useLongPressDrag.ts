@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export const useLongPressDrag = (delay: number = 300) => {
   const [isLongPressActive, setIsLongPressActive] = useState(false);

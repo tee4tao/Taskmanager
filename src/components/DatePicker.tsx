@@ -1,4 +1,3 @@
-// components/DatePicker.tsx
 import { Popover } from "@headlessui/react";
 import { CalendarLtrRegular, DismissRegular } from "@fluentui/react-icons";
 import { format } from "date-fns";

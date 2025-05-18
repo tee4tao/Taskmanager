@@ -1,13 +1,7 @@
 import type React from "react";
 import {
   NavigationRegular,
-  GridRegular,
   ListRegular,
-  ChevronDownRegular,
-  FilterRegular,
-  AddRegular,
-  ArrowSortRegular,
-  DualScreenGroupRegular,
   GridFilled,
   HomeRegular,
   CalendarWeekStartRegular,

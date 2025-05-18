@@ -35,22 +35,23 @@ body {
 
 .task-priority {
   padding: 0.25rem 0.5rem;
-  border-radius: var(--border-radius);
+  /* border-radius: var(--border-radius); */
   text-transform: capitalize;
+  font-size: 14px;
 }
 
 .task-priority-high {
-  background-color: rgba(209, 52, 56, 0.1);
+  /* background-color: rgba(209, 52, 56, 0.1); */
   color: var(--error-color);
 }
 
 .task-priority-medium {
-  background-color: rgba(255, 170, 68, 0.1);
+  /* background-color: rgba(255, 170, 68, 0.1); */
   color: var(--warning-color);
 }
 
 .task-priority-low {
-  background-color: rgba(16, 124, 16, 0.1);
+  /* background-color: rgba(16, 124, 16, 0.1); */
   color: var(--success-color);
 }
 

@@ -1,7 +1,5 @@
-"use client";
-
 import type React from "react";
-import { useState, useEffect, useReducer } from "react";
+import { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import TaskHeader from "./components/TaskHeader";
 import TaskList from "./components/TodoList";
@@ -10,7 +8,6 @@ import TaskInput from "./components/TaskInput";
 import type { Todo, Category } from "./types/todo";
 import { Priority } from "./types/todo";
 import { User } from "./types/user";
-import { todoService } from "./services/todoService";
 import { authService } from "./services/authService";
 import { useTodoContext } from "./context/TodoContext";
 import Navbar from "./components/Navbar";
@@ -62,26 +59,6 @@ const App: React.FC = () => {
   const handleClearSort = () => {
     setSortOption("none");
     setSortAscending(true);
-  };
-
-  // Handle user login
-  const handleLogin = async (username: string, password: string) => {
-    try {
-      const loggedInUser = await authService.login(username, password);
-      setUser(loggedInUser);
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  // Handle user logout
-  const handleLogout = async () => {
-    try {
-      await authService.logout();
-      setUser(null);
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
   };
 
   // Handle sidebar navigation filter change

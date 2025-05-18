@@ -1,13 +1,11 @@
 import {
   AddRegular,
   RadioButtonRegular,
-  CalendarLtrRegular,
   AlertRegular,
   ArrowRepeatAllRegular,
 } from "@fluentui/react-icons";
 import { useState } from "react";
 import { TooltipIcon } from "./TooltipIcon";
-import { Category, Priority } from "../types/todo";
 import DatePicker from "./DatePicker";
 import { useTodoContext } from "../context/TodoContext";
 
@@ -19,6 +17,9 @@ const TaskInput = () => {
   const [quickAddText, setQuickAddText] = useState("");
 
   const [selected, setSelected] = useState<Date | undefined>();
+
+  const [remindActive, setRemindActive] = useState<boolean>(false);
+  const [repeatActive, setRepeatActive] = useState<boolean>(false);
 
   const handleQuickAdd = (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,11 +78,19 @@ const TaskInput = () => {
                 icon={AlertRegular}
                 tooltipText="Remind me"
                 tipClassName="bottom-full"
+                className={`cursor-pointer ${
+                  remindActive ? "text-blue-600" : ""
+                }`}
+                onClick={() => setRemindActive((prev) => !prev)}
               />
               <TooltipIcon
                 icon={ArrowRepeatAllRegular}
                 tooltipText="Repeat"
                 tipClassName="bottom-full"
+                className={`cursor-pointer ${
+                  repeatActive ? "text-blue-600" : ""
+                }`}
+                onClick={() => setRepeatActive((prev) => !prev)}
               />
             </div>
             <button

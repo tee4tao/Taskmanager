@@ -2,8 +2,6 @@ import type React from "react";
 
 import { useState, useRef, useEffect } from "react";
 import {
-  ArrowSortDownRegular,
-  ArrowSortUpRegular,
   DismissRegular,
   ArrowSortRegular,
   StarRegular,
